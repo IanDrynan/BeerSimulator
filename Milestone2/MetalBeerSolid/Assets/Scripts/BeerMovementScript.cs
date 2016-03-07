@@ -100,8 +100,11 @@ public class BeerMovementScript : MonoBehaviour {
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit)) {
-				Dequip();
-				Equip(hit.transform.gameObject);
+                if (hit.transform.gameObject.tag != "frozen")
+                {
+                    Dequip();
+                    Equip(hit.transform.gameObject);
+                }
 			}
 		}
 		else if (Input.GetMouseButtonDown(1)) {

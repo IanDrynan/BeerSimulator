@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class FrozenBeerScript : MonoBehaviour {
 
 	public Transform target;
+    public Transform salt;
+    public Transform player;
 	public float moveSpeed = 0.50f;
 	public float turnSpeed = 4.0f;
 	public float range = 90.0f;
@@ -23,6 +26,8 @@ public class FrozenBeerScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		target = GameObject.FindWithTag ("magnet").transform;
+        salt = GameObject.FindWithTag("salt").transform;
+        player = GameObject.FindWithTag("Player").transform;
 	}
 
 	void Update() {
@@ -57,11 +62,39 @@ public class FrozenBeerScript : MonoBehaviour {
 
 		}
 	}
+    void LateUpdate()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                salt = player.transform.Find("salt");
+                if (salt != null) //if salt child was found, do this
+                {
+                    if(hit.transform.gameObject.tag == "frozen")
+                    {
+                        gameObject.SetActive(false);
+                        if (onBeerSaved != null)
+                        {
+                            onBeerSaved();
+                        }
+                    }
+
+                }
+                else
+                {
+                    print("salt not found");
+                }
+            }
+        }
+    }
 
 
 
 
 
-			
+
 }
 
