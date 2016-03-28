@@ -27,7 +27,7 @@ public class DoorScript : MonoBehaviour {
 		{
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit))
+			if (Physics.Raycast(ray, out hit, 10))
 			{
 				key = player.transform.Find("key");
 				if (key != null) //if key child was found, do this

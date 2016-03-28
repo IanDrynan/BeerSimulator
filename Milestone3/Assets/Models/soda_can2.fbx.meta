@@ -201,8 +201,8 @@ ModelImporter:
     - serializedVersion: 16
       name: BeerRoll
       takeName: Armature|BeerRoll
-      firstFrame: 10
-      lastFrame: 42
+      firstFrame: 10.01
+      lastFrame: 23.9
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

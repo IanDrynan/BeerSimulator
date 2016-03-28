@@ -11,8 +11,11 @@ public class BeerMovementScript : MonoBehaviour {
 	private GameObject speechObj;
 	private Text speechText;
 
-	//Movement vars
-	public float speed = 20.0f;
+    //Movement vars
+    public float baseSpeed = 15.0f;
+	public float speed = 15.0f;
+    public float acceleration = .0833f;
+    public float maxSpeed = 30.0f;
 	public float turnSpeed = 60.0f;
 	private Vector3 moveDirection = Vector3.zero;
 	public float gravity = 9.8f;
@@ -20,8 +23,9 @@ public class BeerMovementScript : MonoBehaviour {
 	private float vertVel = 0;
 
 	//jumping
-	private float jumpSpeed = 7.5f; 
-	private float powerUpScalar = 1; //2 for mentos
+	public float jumpSpeed = 7.5f; 
+	public float powerUpScalar = 1; 
+    public float mentosScalar = 2.5f;
 	private ParticleSystem particleSys;
 
 	//PowerUps/Equipped Items
@@ -58,11 +62,30 @@ public class BeerMovementScript : MonoBehaviour {
 		
 	// Update is called once per frame
 	void Update () {
-	    if (Input.GetKey("w") || Input.GetKey("a") || Input.GetKey("s") || Input.GetKey("d")) {
+        
+        if (Input.GetKey("w") || Input.GetKey("s")) {
 			anim.SetBool("rolling", true);
-		} else {
-			anim.SetBool("rolling", false);
+            if (controller.isGrounded)
+            {
+                if (speed < maxSpeed)
+                {
+                    speed += acceleration;
+                }
+            }
+            
 		}
+        else if (Input.GetKey("a") || Input.GetKey("d"))
+        {
+            anim.SetBool("rolling", true);
+        }
+        else {
+			anim.SetBool("rolling", false);
+            if (controller.isGrounded)
+            {
+                speed = baseSpeed;
+            }
+		}
+
 		if (controller.isGrounded) {
 			particleSys.Stop ();
 		} 
@@ -98,13 +121,14 @@ public class BeerMovementScript : MonoBehaviour {
 		if (Input.GetMouseButtonDown (0)) {
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit)) {
-				string tag = hit.transform.gameObject.tag;
-				if (tag != "frozen" && tag != "door" && tag != "equipped")
-				{
-					Dequip();
-					Equip(hit.transform.gameObject);
-				}
+			if (Physics.Raycast(ray, out hit, 7)) {
+                
+                string tag = hit.transform.gameObject.tag;
+                if (tag != "frozen" && tag != "door" && tag != "equipped")
+                {
+                    Dequip();
+                    Equip(hit.transform.gameObject);
+                }
 			}
 		}
 		else if (Input.GetMouseButtonDown(1)) {
@@ -129,6 +153,7 @@ public class BeerMovementScript : MonoBehaviour {
     {
         if (equippedItem)
         {
+            equippedItem.GetComponent<Rigidbody>().isKinematic = false;
             equippedItem.transform.parent = null;
             equippedItem.transform.position = equippedItemOrigPos;
 			equippedItem.transform.localScale = equippedItemOrigSize;
@@ -148,7 +173,7 @@ public class BeerMovementScript : MonoBehaviour {
 		} else if (itemTag == "salt") {
 			StartCoroutine (say ("Awesome, salt! What did my Beer School Chemistry teacher say about salt and cold weather?", 3));
 		} else if (itemTag == "magnet") {
-			StartCoroutine (say ("Dope a magnet. Wonder what I could attract with this?", 3));
+			StartCoroutine (say ("Dope, a magnet! Wonder what I could attract with this?", 3));
 		}
 
         // attach item to bone
@@ -157,6 +182,7 @@ public class BeerMovementScript : MonoBehaviour {
 		equippedItemOrigSize = equippedItem.transform.localScale;
         equippedItem.tag = "equipped";
         equippedItem.transform.parent = self.transform;
+        equippedItem.GetComponent<Rigidbody>().isKinematic = true;
         equippedItem.transform.localPosition = new Vector3(-0.8f, 1.0f, 0.5f);
         equippedItem.transform.localRotation = Quaternion.identity;
         equippedItem.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
@@ -166,13 +192,13 @@ public class BeerMovementScript : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.CompareTag ("Mentos")) {
 			powerUp = other.gameObject;
-			powerUpScalar *= 2;
+			powerUpScalar = mentosScalar;
 			mentosJumpsLeft = 10;
 			other.gameObject.SetActive (false);
 			displayMentosText ();
 		} else if (other.gameObject.CompareTag ("MentosT")) {
 			powerUp = other.gameObject;
-			powerUpScalar *= 2;
+			powerUpScalar = mentosScalar;
 			mentosJumpsLeft = 3;
 			other.gameObject.SetActive (false);
 			displayMentosText ();
@@ -194,7 +220,7 @@ public class BeerMovementScript : MonoBehaviour {
 			GameObject otherGameObject = other.gameObject.transform.parent.gameObject;
 			string nameOfObject = otherGameObject.name;
 
-			string blurb = "Whoa, I think I have enough can dexterity to pick up that " + nameOfObject + ". Should I Left Click it?";
+			string blurb = "I think I can pick that " + nameOfObject + " if I get close enough. Should I Left Click it?";
 			StartCoroutine (say (blurb, 3));
 		} else if (other.gameObject.CompareTag ("heatlamp")) {
 			string blurb = "Oh it's a heat lamp! Jeez Louise, it's hot, better not stay near this bad boy too long, I'm sweating!";
