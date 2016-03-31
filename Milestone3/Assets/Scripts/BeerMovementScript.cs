@@ -144,7 +144,7 @@ public class BeerMovementScript : MonoBehaviour {
 					string blurb = "SICK. These mentos make me feel amazing! What would happen if I clicked Shift before I jump?";
 					StartCoroutine (say (blurb, 8));
 				} 
-				else if (tag != "frozen" && tag != "door" && tag != "equipped")
+				else if (tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor")
                 {
                     Dequip();
                     Equip(hit.transform.gameObject);
