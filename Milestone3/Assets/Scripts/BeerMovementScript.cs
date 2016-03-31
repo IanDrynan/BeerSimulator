@@ -18,14 +18,14 @@ public class BeerMovementScript : MonoBehaviour {
     public float maxSpeed = 30.0f;
 	public float turnSpeed = 60.0f;
 	private Vector3 moveDirection = Vector3.zero;
-	public float gravity = 9.8f;
+	private float gravity = 4.0f;
 	public float pushPower = 2.0F;
 	private float vertVel = 0;
 
 	//jumping
-	public float jumpSpeed = 7.5f; 
+	private float jumpSpeed = 14f; 
 	public float powerUpScalar = 1; 
-    public float mentosScalar = 2.5f;
+    public float mentosScalar = 1.5f;
 	private ParticleSystem particleSys;
 
 	//PowerUps/Equipped Items
@@ -45,7 +45,7 @@ public class BeerMovementScript : MonoBehaviour {
 
 	void Awake () {
 		self = transform;
-		FrozenBeerScript.onBeerSaved += incBeersSaved;
+		FrozenBeerScript.onBeerSaved += frozenBeerSaved;
 	}
 
 	// Use this for initialization
@@ -88,12 +88,14 @@ public class BeerMovementScript : MonoBehaviour {
 
 		if (controller.isGrounded) {
 			particleSys.Stop ();
+			gravity = 4.0f;
 		} 
 			moveDirection = transform.forward * Input.GetAxis ("Vertical") * speed;
 			float turn = Input.GetAxis ("Horizontal");
 			transform.Rotate (0, turn * turnSpeed * Time.deltaTime, 0);
 		if (controller.isGrounded && Input.GetKeyDown ("space")) {
 			vertVel = jumpSpeed;
+			gravity = 30f;
 			particleSys.Play (); 
 			if (Input.GetKey("left shift") && mentosJumpsLeft > 0) {
 				StartCoroutine (say("WAHOOOOO", 2));
@@ -107,8 +109,7 @@ public class BeerMovementScript : MonoBehaviour {
 				}
 				displayMentosText ();
 			}
-		}
-		 
+		} 
 		vertVel -= gravity * Time.deltaTime;
 		moveDirection.y = vertVel;
 		controller.Move (moveDirection * Time.deltaTime);
@@ -124,11 +125,30 @@ public class BeerMovementScript : MonoBehaviour {
 			if (Physics.Raycast(ray, out hit, 7)) {
                 
                 string tag = hit.transform.gameObject.tag;
-                if (tag != "frozen" && tag != "door" && tag != "equipped")
+				if (tag == "Mentos") 
+				{
+					powerUp = hit.transform.gameObject;
+					powerUpScalar = mentosScalar;
+					mentosJumpsLeft = 10;
+					hit.transform.gameObject.SetActive (false);
+					displayMentosText ();
+				} 
+				else if (tag == "MentosT") 
+				{
+					powerUp = hit.transform.gameObject;
+					powerUpScalar = mentosScalar;
+					mentosJumpsLeft = 3;
+					hit.transform.gameObject.SetActive (false);
+					displayMentosText ();
+
+					string blurb = "SICK. These mentos make me feel amazing! What would happen if I clicked Shift before I jump?";
+					StartCoroutine (say (blurb, 8));
+				} 
+				else if (tag != "frozen" && tag != "door" && tag != "equipped")
                 {
                     Dequip();
                     Equip(hit.transform.gameObject);
-                }
+				} 
 			}
 		}
 		else if (Input.GetMouseButtonDown(1)) {
@@ -170,6 +190,7 @@ public class BeerMovementScript : MonoBehaviour {
 		string itemTag = item.tag;
 		if (itemTag == "key") {
 			StartCoroutine (say ("Sweet! I got a key! Now let's find the door!", 3));
+			//item.gameObject.transform.FindChild ("KeyCollider").gameObject.SetActive (false);
 		} else if (itemTag == "salt") {
 			StartCoroutine (say ("Awesome, salt! What did my Beer School Chemistry teacher say about salt and cold weather?", 3));
 		} else if (itemTag == "magnet") {
@@ -185,47 +206,58 @@ public class BeerMovementScript : MonoBehaviour {
         equippedItem.GetComponent<Rigidbody>().isKinematic = true;
         equippedItem.transform.localPosition = new Vector3(-0.8f, 1.0f, 0.5f);
         equippedItem.transform.localRotation = Quaternion.identity;
-        equippedItem.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+		if (equippedItem.name == "magnet") {
+			equippedItem.transform.localScale = new Vector3 (0.4f, 0.4f, 0.4f);
+		} else {
+			equippedItem.transform.localScale = new Vector3 (0.2f, 0.2f, 0.2f);
+		}
+
 
     }
 
 	void OnTriggerEnter(Collider other) {
-		if (other.gameObject.CompareTag ("Mentos")) {
-			powerUp = other.gameObject;
-			powerUpScalar = mentosScalar;
-			mentosJumpsLeft = 10;
-			other.gameObject.SetActive (false);
-			displayMentosText ();
-		} else if (other.gameObject.CompareTag ("MentosT")) {
-			powerUp = other.gameObject;
-			powerUpScalar = mentosScalar;
-			mentosJumpsLeft = 3;
-			other.gameObject.SetActive (false);
-			displayMentosText ();
-
-			string blurb = "SICK. These mentos make me feel amazing! What would happen if I clicked Shift before I jump?";
-			StartCoroutine (say (blurb, 8));
-		} else if (other.gameObject.CompareTag ("movable")) { //trigger speech blurb display using child element's capsule collider 
+//		if (other.gameObject.CompareTag ("Mentos")) {
+//			powerUp = other.gameObject;
+//			powerUpScalar = mentosScalar;
+//			mentosJumpsLeft = 10;
+//			other.gameObject.SetActive (false);
+//			displayMentosText ();
+//		} else if (other.gameObject.CompareTag ("MentosT")) {
+//			powerUp = other.gameObject;
+//			powerUpScalar = mentosScalar;
+//			mentosJumpsLeft = 3;
+//			other.gameObject.SetActive (false);
+//			displayMentosText ();
+//
+//			string blurb = "SICK. These mentos make me feel amazing! What would happen if I clicked Shift before I jump?";
+//			StartCoroutine (say (blurb, 8));
+//		} else 
+		if (other.gameObject.CompareTag ("movable")) { //trigger speech blurb display using child element's capsule collider 
 			GameObject otherGameObject = other.gameObject.transform.parent.gameObject;
 			string nameOfObject = otherGameObject.name;
 			string blurb = "Hmm, this " + nameOfObject + " seems movable. Why don't I walk up to it and push it?";
 			StartCoroutine (say (blurb, 3));
+			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("powerUp")) {
 			GameObject otherGameObject = other.gameObject.transform.parent.gameObject;
 			string nameOfObject = otherGameObject.name;
-
 			string blurb = "Hmm, it looks like I can pick up this " + nameOfObject + ". What would happen if I walked over it?";
 			StartCoroutine (say (blurb, 3));
+			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("equippable")) {
 			GameObject otherGameObject = other.gameObject.transform.parent.gameObject;
 			string nameOfObject = otherGameObject.name;
-
-			string blurb = "I think I can pick that " + nameOfObject + " if I get close enough. Should I Left Click it?";
-			StartCoroutine (say (blurb, 3));
+//			string blurb = "I think I can pick that " + nameOfObject + " if I get close enough. Should I Left Click it?";
+//			StartCoroutine (say (blurb, 3));
+			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("heatlamp")) {
 			string blurb = "Oh it's a heat lamp! Jeez Louise, it's hot, better not stay near this bad boy too long, I'm sweating!";
 			StartCoroutine (say (blurb, 3));
+		} else if (other.gameObject.CompareTag ("frozenText")) {
+			string blurb = "Oh noes, my buddy's frozen solid!";
+			StartCoroutine (say (blurb, 3));
 		}
+
 	}
 
 
@@ -238,13 +270,18 @@ public class BeerMovementScript : MonoBehaviour {
 	}
 
 	void displayWinText() {
-		winText.text = "Cheers. You won!";
+		winText.text = "Cheers. You saved your frozen friend! Nice job, Elsa. Your friend had stolen a key right before he was frozen and you have unlocked the next room!";
 	}
 		
 	void onDestroy() { //unsubscribes
-		FrozenBeerScript.onBeerSaved -= incBeersSaved;
+		FrozenBeerScript.onBeerSaved -= frozenBeerSaved;
+
 	}
-		
+	void frozenBeerSaved() {
+		GameObject.FindGameObjectWithTag ("frozenBeerDoor").SetActive (false);
+		incBeersSaved ();
+	}
+
 	void incBeersSaved() {
 		numBeersSaved += 1;
 		displayBeersText ();

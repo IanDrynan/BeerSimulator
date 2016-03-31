@@ -1,0 +1,15 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BeerMovementScript.cs">
+    <Files>
+      <File FileName="Assets/Scripts/BeerMovementScript.cs" Line="137" Column="6" />
+      <File FileName="Assets/Scripts/BeerCanCollisionScript.cs" Line="37" Column="4" />
+      <File FileName="Assets/CameraScript.cs" Line="50" Column="29" />
+      <File FileName="Assets/Scripts/FrozenBeerScript.cs" Line="76" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

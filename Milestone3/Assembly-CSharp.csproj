@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{942BEBD3-9816-57F3-962D-F07091822301}</ProjectGuid>
+    <ProjectGuid>{B4C136B4-0618-9074-7357-63732EC1DCCA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -45,7 +45,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\CameraScript.cs" />
      <Compile Include="Assets\KeyScript.cs" />
+     <Compile Include="Assets\Scripts\BeerCanCollisionScript.cs" />
      <Compile Include="Assets\Scripts\BeerMovementScript.cs" />
      <Compile Include="Assets\Scripts\DoorScript.cs" />
      <Compile Include="Assets\Scripts\FrozenBeerScript.cs" />
@@ -53,6 +55,7 @@
      <Compile Include="Assets\Scripts\MovableBrickScript.cs" />
      <Compile Include="Assets\Scripts\Story.cs" />
      <None Include="Assets\Models\Key\readME keys.txt" />
+     <None Include="Assets\City Props Pack\Readme.txt" />
  <Reference Include="UnityEngine.Networking">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
