@@ -23,7 +23,10 @@ public class BeerCanCollisionScript : MonoBehaviour {
 //		if (!gameObj.CompareTag("movable") && gameObj.name != "Plane") {
 //			Physics.IgnoreCollision (gameObj.GetComponent<Collider> (), GetComponent<Collider> ());
 //		} else {
-		if (gameObj.CompareTag ("movable")) {
+		if (gameObj.CompareTag("Weight")){
+			transform.parent = gameObj.transform;
+		}
+		else if (gameObj.CompareTag ("movable")) {
 			Rigidbody rb = collision.collider.attachedRigidbody;
 			if (rb == null || rb.isKinematic)
 				return;

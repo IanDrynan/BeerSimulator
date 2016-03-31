@@ -16,8 +16,8 @@ public class FrozenBeerScript : MonoBehaviour {
 
 
 	//Events
-	public delegate void BeerSaved ();
-	public static event BeerSaved onBeerSaved;
+	public delegate void FrozenBeerSaved ();
+	public static event FrozenBeerSaved onFrozenBeerSaved;
 
 	void Awake() {
 		self = transform;
@@ -56,8 +56,8 @@ public class FrozenBeerScript : MonoBehaviour {
 
 
 			//Trigger Event that this Beer Can was saved
-			if (onBeerSaved != null) {
-				onBeerSaved();
+			if (onFrozenBeerSaved != null) {
+				onFrozenBeerSaved();
 			}
 
 		}
@@ -76,9 +76,9 @@ public class FrozenBeerScript : MonoBehaviour {
 					if(hit.transform.gameObject.tag == "frozen")
 					{
 						gameObject.SetActive(false);
-						if (onBeerSaved != null)
+						if (onFrozenBeerSaved != null)
 						{
-							onBeerSaved();
+							onFrozenBeerSaved();
 						}
 					}
 

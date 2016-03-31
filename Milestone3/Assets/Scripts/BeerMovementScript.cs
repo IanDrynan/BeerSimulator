@@ -10,6 +10,8 @@ public class BeerMovementScript : MonoBehaviour {
 	public Transform self;
 	private GameObject speechObj;
 	private Text speechText;
+	private GameObject friendSpeechObj;
+	private Text friendSpeechText;
 
     //Movement vars
     public float baseSpeed = 15.0f;
@@ -45,7 +47,9 @@ public class BeerMovementScript : MonoBehaviour {
 
 	void Awake () {
 		self = transform;
-		FrozenBeerScript.onBeerSaved += frozenBeerSaved;
+		FrozenBeerScript.onFrozenBeerSaved += frozenBeerSaved;
+		FellowNattyLibraryScript.onLibraryBeerSaved += libraryBeerSaved;
+		FellowNattyLibraryScript.onGameOver += gameOver;
 	}
 
 	// Use this for initialization
@@ -55,6 +59,8 @@ public class BeerMovementScript : MonoBehaviour {
 		particleSys = GetComponentInChildren<ParticleSystem> ();
 		speechObj = self.FindChild("SpeechObject").gameObject;
 		speechText = speechObj.GetComponentInChildren<Text> ();
+		friendSpeechObj = self.FindChild ("FriendSpeechObject").gameObject;
+		friendSpeechText = friendSpeechObj.GetComponentInChildren<Text> ();
 		speechObj.SetActive (false);
 		displayMentosText ();
 		displayBeersText ();
@@ -256,6 +262,9 @@ public class BeerMovementScript : MonoBehaviour {
 		} else if (other.gameObject.CompareTag ("frozenText")) {
 			string blurb = "Oh noes, my buddy's frozen solid!";
 			StartCoroutine (say (blurb, 3));
+		} else if (other.gameObject.CompareTag ("helpMe")) {
+			string blurb = "HELP ME. I'M UP HERE ON TOP OF THIS BOOKSHELF!";
+			StartCoroutine (friendSay (blurb, 2));
 		}
 
 	}
@@ -269,23 +278,31 @@ public class BeerMovementScript : MonoBehaviour {
 		beersSavedText.text = "Nattys Found: " + numBeersSaved.ToString ();
 	}
 
-	void displayWinText() {
-		winText.text = "Cheers. You saved your frozen friend! Nice job, Elsa. Your friend had stolen a key right before he was frozen and you have unlocked the next room!";
+	void displayWinText(string winningText) {
+		winText.text = winningText;
 	}
 		
 	void onDestroy() { //unsubscribes
-		FrozenBeerScript.onBeerSaved -= frozenBeerSaved;
+		FrozenBeerScript.onFrozenBeerSaved -= frozenBeerSaved;
+		FellowNattyLibraryScript.onLibraryBeerSaved -= libraryBeerSaved;
+		FellowNattyLibraryScript.onGameOver -= gameOver;
 
 	}
 	void frozenBeerSaved() {
 		GameObject.FindGameObjectWithTag ("frozenBeerDoor").SetActive (false);
-		incBeersSaved ();
-	}
-
-	void incBeersSaved() {
 		numBeersSaved += 1;
 		displayBeersText ();
-		displayWinText ();
+		displayWinText ("Cheers. You saved your frozen friend! Nice job, Elsa. Your friend had stolen a key right before he was frozen and you have unlocked the next room!");
+	}
+
+	void libraryBeerSaved() {
+		numBeersSaved += 1;
+		displayBeersText ();
+		displayWinText ("Cheers. You saved your fellow Natty!");
+	}
+
+	void gameOver() {
+		winText.text = "GAME OVER, SORRY! YOU KILLED YOUR FELLOW BEER. THE FALL WAS TOO LARGE";
 	}
 
 	//display speech bubble with blurb as text for duration, time
@@ -294,6 +311,13 @@ public class BeerMovementScript : MonoBehaviour {
 		speechObj.SetActive (true);
 		yield return new WaitForSeconds(time);
 		speechObj.SetActive(false);
+	}
+
+	IEnumerator friendSay(string blurb, float time) {
+		friendSpeechText.text = blurb;
+		friendSpeechObj.SetActive (true);
+		yield return new WaitForSeconds(time);
+		friendSpeechObj.SetActive(false);
 	}
 
 }
