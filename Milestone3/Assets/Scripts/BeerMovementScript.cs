@@ -270,10 +270,10 @@ public class BeerMovementScript : MonoBehaviour {
 //			string blurb = "Hmmm, this door seemed lock. Maybe there's a key somewhere.";
 //			StartCoroutine (say (blurb, 2));
 //			other.gameObject.SetActive (false);
-		} else if (other.gameObject.CompareTag ("pillowCollider")) {
+		} else if (other.gameObject.CompareTag ("pillow")) {
 			string blurb = "Looks like a pillow or cushion of some sort. What could that be useful for?";
 			StartCoroutine (say (blurb, 2));
-			other.gameObject.SetActive (false);
+			other.gameObject.SetActive(false);
 		} else if (other.gameObject.CompareTag ("booksCollider")) {
 			string blurb = "Oh cool books! Not that I want to read them, but maybe I could shove them around or something..";
 			StartCoroutine (say (blurb, 2));
@@ -308,6 +308,7 @@ public class BeerMovementScript : MonoBehaviour {
 	}
 
 	void libraryBeerSaved() {
+		Debug.Log ("Library Beer Saved");
 		numBeersSaved += 1;
 		displayBeersText ();
 		//displayWinText ("Cheers. You saved your fellow Natty!");
