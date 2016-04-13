@@ -45,11 +45,16 @@ public class BeerMovementScript : MonoBehaviour {
 	public Text beersSavedText;
 	public Text winText;
 
+	//Cameras
+	GameObject mainCamera;
+	GameObject cutSceneCamera;
+
 	void Awake () {
 		self = transform;
 		FrozenBeerScript.onFrozenBeerSaved += frozenBeerSaved;
 		FellowNattyLibraryScript.onLibraryBeerSaved += libraryBeerSaved;
 		FellowNattyLibraryScript.onGameOver += gameOver;
+		DoorScript.onDoorOpen += clearLevel;
 	}
 
 	// Use this for initialization
@@ -61,6 +66,7 @@ public class BeerMovementScript : MonoBehaviour {
 		speechText = speechObj.GetComponentInChildren<Text> ();
 		friendSpeechObj = self.FindChild ("FriendSpeechObject").gameObject;
 		friendSpeechText = friendSpeechObj.GetComponentInChildren<Text> ();
+		mainCamera = self.FindChild ("MainCamera").gameObject;
 		speechObj.SetActive (false);
 		displayMentosText ();
 		displayBeersText ();
@@ -195,7 +201,7 @@ public class BeerMovementScript : MonoBehaviour {
     {
 		string itemTag = item.tag;
 		if (itemTag == "key") {
-			StartCoroutine (say ("Sweet! I got a key! Now let's find the door!", 3));
+			StartCoroutine (say ("Sweet! I got a key! Now let's find the door to use this on!", 3));
 			//item.gameObject.transform.FindChild ("KeyCollider").gameObject.SetActive (false);
 			GameObject.FindGameObjectWithTag("doorCollider1").SetActive(false);
 		} else if (itemTag == "salt") {
@@ -222,6 +228,12 @@ public class BeerMovementScript : MonoBehaviour {
 
     }
 
+	void clearLevel() {
+		Dequip ();
+		mentosJumpsLeft = 0;
+		displayMentosText ();
+	}
+
 	void OnTriggerEnter(Collider other) {
 //		if (other.gameObject.CompareTag ("Mentos")) {
 //			powerUp = other.gameObject;
@@ -244,19 +256,19 @@ public class BeerMovementScript : MonoBehaviour {
 			string nameOfObject = otherGameObject.name;
 			string blurb = "Hmm, this " + nameOfObject + " seems movable. Why don't I walk up to it and push it?";
 			StartCoroutine (say (blurb, 3));
-			other.gameObject.SetActive (false);
+//			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("powerUp")) {
 			GameObject otherGameObject = other.gameObject.transform.parent.gameObject;
 			string nameOfObject = otherGameObject.name;
 			string blurb = "Hmm, it looks like I can pick up this " + nameOfObject + ". What would happen if I clicked on it?";
 			StartCoroutine (say (blurb, 2));
-			other.gameObject.SetActive (false);
+//			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("equippable")) {
 			GameObject otherGameObject = other.gameObject.transform.parent.gameObject;
 			string nameOfObject = otherGameObject.name;
 			string blurb = "I think I can pick that " + nameOfObject + " if I get close enough. Should I Left Click it?";
 			StartCoroutine (say (blurb, 2));
-			other.gameObject.SetActive (false);
+//			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("heatlamp")) {
 			string blurb = "Oh it's a heat lamp! Jeez Louise, it's hot, better not stay near this bad boy too long, I'm sweating!";
 			StartCoroutine (say (blurb, 3));
@@ -264,7 +276,7 @@ public class BeerMovementScript : MonoBehaviour {
 			string blurb = "Oh noes, my buddy's frozen solid!";
 			StartCoroutine (say (blurb, 3));
 		} else if (other.gameObject.CompareTag ("helpMe")) {
-			string blurb = "HELP ME. I'M UP HERE ON TOP OF THIS BOOKSHELF! GET ME DOWN FROM HERE!";
+			string blurb = "HELP ME. I'M UP HERE ON TOP OF THIS BOOKSHELF! GET ME DOWN FROM HERE! IF I HIT THE GROUND, I'LL DIE. I NEED TO LAND ON SOMETHING SOFT!";
 			StartCoroutine (friendSay (blurb, 2));
 //		} else if (other.gameObject.CompareTag ("doorCollider1")) {
 //			string blurb = "Hmmm, this door seemed lock. Maybe there's a key somewhere.";
@@ -273,11 +285,23 @@ public class BeerMovementScript : MonoBehaviour {
 		} else if (other.gameObject.CompareTag ("pillow")) {
 			string blurb = "Looks like a pillow or cushion of some sort. What could that be useful for?";
 			StartCoroutine (say (blurb, 2));
-			other.gameObject.SetActive(false);
+			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("booksCollider")) {
 			string blurb = "Oh cool books! Not that I want to read them, but maybe I could shove them around or something..";
 			StartCoroutine (say (blurb, 2));
 			other.gameObject.SetActive (false);
+		} else if (other.gameObject.CompareTag ("cutscene")) {
+			GameObject.FindGameObjectWithTag ("Player").gameObject.GetComponent<CharacterController> ().enabled = false;
+//			cutSceneCamera = GameObject.FindGameObjectWithTag("cutscene");
+		
+			cutSceneCamera = other.gameObject;
+//			cutSceneCamera.SetActive (true);
+			mainCamera.GetComponent<Camera>().enabled = false;
+			cutSceneCamera.GetComponent<Camera>().enabled = true;
+			cutSceneCamera.GetComponent<Animation> ().Play ();
+//			mainCamera.enabled = true;
+//			cutSceneCamera.enabled = false;
+//			
 		}
 
 	}
@@ -297,23 +321,26 @@ public class BeerMovementScript : MonoBehaviour {
 		FrozenBeerScript.onFrozenBeerSaved -= frozenBeerSaved;
 		FellowNattyLibraryScript.onLibraryBeerSaved -= libraryBeerSaved;
 		FellowNattyLibraryScript.onGameOver -= gameOver;
+		DoorScript.onDoorOpen -= clearLevel;
 
 	}
 	void frozenBeerSaved() {
 		GameObject.FindGameObjectWithTag ("frozenBeerDoor").SetActive (false);
 		numBeersSaved += 1;
 		displayBeersText ();
+		clearLevel ();
 		//displayWinText ("Cheers. You saved your frozen friend! Nice job, Elsa. Your friend had stolen a key right before he was frozen and you have unlocked the next room!");
 		StartCoroutine (displayWinText ("Cheers. You saved your frozen friend! Nice job, Elsa. Your friend had stolen a key right before he was frozen and you have unlocked the next room!"));
+
 	}
 
 	void libraryBeerSaved() {
 		Debug.Log ("Library Beer Saved");
 		numBeersSaved += 1;
 		displayBeersText ();
+		clearLevel ();
 		//displayWinText ("Cheers. You saved your fellow Natty!");
 		StartCoroutine (displayWinText ("Cheers. You saved your fellow Natty!"));
-
 	}
 
 	void gameOver() {

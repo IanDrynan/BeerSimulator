@@ -6,6 +6,9 @@ public class DoorScript : MonoBehaviour {
 	private Transform player;
 	private Transform key;
 
+	public delegate void DoorOpen ();
+	public static event DoorOpen onDoorOpen;
+
 	void Awake () {
 		
 	}
@@ -34,6 +37,7 @@ public class DoorScript : MonoBehaviour {
 				{
 					gameObject.SetActive(false); //delete the door
 					key.gameObject.SetActive(false);
+					onDoorOpen ();
 				}
 				else
 				{

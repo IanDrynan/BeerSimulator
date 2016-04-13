@@ -81,7 +81,7 @@ public class CameraScript: MonoBehaviour {
 
 		float cameraX = transform.rotation.x;
 		//checks if right mouse button is pushed
-//		if(Input.GetMouseButton(0))
+//		if(Input.GetMouseButton(2))
 //		{
 			//sets CHARACTERS x rotation to match cameras x rotation
 			CameraTarget.eulerAngles = new Vector3(cameraX,transform.eulerAngles.y,transform.eulerAngles.z);
