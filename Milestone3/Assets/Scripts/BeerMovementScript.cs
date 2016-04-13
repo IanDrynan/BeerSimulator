@@ -291,18 +291,22 @@ public class BeerMovementScript : MonoBehaviour {
 			StartCoroutine (say (blurb, 2));
 			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("cutscenecollider")) {
-			Debug.Log ("HERE");
-			GameObject.FindGameObjectWithTag ("Player").gameObject.SetActive(false);
-//			cutSceneCamera = GameObject.FindGameObjectWithTag("cutscene");
-//			cutSceneCamera.SetActive (true);
-			mainCamera.GetComponent<Camera>().enabled = false;
-			cutSceneCamera.GetComponent<Camera>().enabled = true;
-			cutSceneCamera.GetComponent<Animator> ().Play("libCutscene");
-//			mainCamera.enabled = true;
-//			cutSceneCamera.enabled = false;
+			StartCoroutine (startCutScene1 ());
+			other.gameObject.SetActive (false);
 //			
 		}
 
+	}
+
+	IEnumerator startCutScene1() {
+		mainCamera.GetComponent<Camera>().enabled = false;
+		cutSceneCamera.GetComponent<Animator> ().enabled = true;
+		cutSceneCamera.GetComponent<Camera>().enabled = true;
+		cutSceneCamera.GetComponent<Animator> ().Play("libCutscene");
+		yield return new WaitForSeconds (24);
+		mainCamera.GetComponent<Camera>().enabled = true;
+		cutSceneCamera.GetComponent<Animator> ().enabled = false;
+		cutSceneCamera.GetComponent<Camera>().enabled = false;
 	}
 
 
