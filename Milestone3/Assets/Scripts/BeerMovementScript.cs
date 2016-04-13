@@ -46,8 +46,8 @@ public class BeerMovementScript : MonoBehaviour {
 	public Text winText;
 
 	//Cameras
-	GameObject mainCamera;
-	GameObject cutSceneCamera;
+	public GameObject mainCamera;
+	public GameObject cutSceneCamera;
 
 	void Awake () {
 		self = transform;
@@ -290,15 +290,14 @@ public class BeerMovementScript : MonoBehaviour {
 			string blurb = "Oh cool books! Not that I want to read them, but maybe I could shove them around or something..";
 			StartCoroutine (say (blurb, 2));
 			other.gameObject.SetActive (false);
-		} else if (other.gameObject.CompareTag ("cutscene")) {
-			GameObject.FindGameObjectWithTag ("Player").gameObject.GetComponent<CharacterController> ().enabled = false;
+		} else if (other.gameObject.CompareTag ("cutscenecollider")) {
+			Debug.Log ("HERE");
+			GameObject.FindGameObjectWithTag ("Player").gameObject.SetActive(false);
 //			cutSceneCamera = GameObject.FindGameObjectWithTag("cutscene");
-		
-			cutSceneCamera = other.gameObject;
 //			cutSceneCamera.SetActive (true);
 			mainCamera.GetComponent<Camera>().enabled = false;
 			cutSceneCamera.GetComponent<Camera>().enabled = true;
-			cutSceneCamera.GetComponent<Animation> ().Play ();
+			cutSceneCamera.GetComponent<Animator> ().Play("libCutscene");
 //			mainCamera.enabled = true;
 //			cutSceneCamera.enabled = false;
 //			
