@@ -465,7 +465,7 @@ public class BeerMovementScript : MonoBehaviour {
 		winText.text = winningText;
 		mentosJumpsLeft = 0;
 		displayMentosText ();
-		yield return new WaitForSeconds (3);
+		yield return new WaitForSeconds (8);
 		winText.text = "";
 
 	}
