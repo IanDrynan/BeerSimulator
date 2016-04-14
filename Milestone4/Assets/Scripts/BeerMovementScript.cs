@@ -51,8 +51,10 @@ public class BeerMovementScript : MonoBehaviour {
 	public GameObject cutSceneCamera2;
 
 	//Original Positions of Objects for Checkpoint System
+//	private Vector3 yourLocation = new Vector3(-88.2f, 7.9f, -58.9f);
+	private Vector3 yourLocation;
+
 	//Library Room
-	private Vector3 yourLocation = new Vector3(-88.2f, 7.9f, -58.9f);
 	private Vector3 pillowLocation = new Vector3(-152.6f, 15.78f, -50.41f);
 	private Vector3 pillowRotation = new Vector3(0,0,0);
 	private Vector3 friendLocation = new Vector3(-157.51f, 16.95f, -93.35f);
@@ -62,6 +64,22 @@ public class BeerMovementScript : MonoBehaviour {
 
 	//Science Room
 	//TODO books, mentos, beercan, magnet, salt, printer, and ur location
+	private Vector3 book1Loc, book2Loc, book3Loc, book4Loc, book5Loc, book6Loc, book7Loc, book8Loc, book9Loc, book10Loc, book11Loc, book12Loc, book13Loc, book14Loc, book15Loc, book16Loc, book17Loc, book18Loc, book19Loc, book20Loc;
+	private Vector3 mentosScienceLoc;
+	private Vector3 frozenBeerLoc;
+	private Vector3 magnetLoc;
+	private Vector3 saltLoc;
+	private Vector3 printerLoc;
+
+	private Vector3 book1Rot, book2Rot, book3Rot, book4Rot, book5Rot, book6Rot, book7Rot, book8Rot, book9Rot, book10Rot, book11Rot, book12Rot, book13Rot, book14Rot, book15Rot, book16Rot, book17Rot, book18Rot, book19Rot, book20Rot;
+	private Vector3 mentosScienceRot;
+	private Vector3 frozenBeerRot;
+	private Vector3 magnetRot;
+	private Vector3 saltRot;
+	private Vector3 printerRot;
+
+	private string level = "tutorial";
+	private GameObject MentosScienceRoom;
 
 	void Awake () {
 		self = transform;
@@ -84,6 +102,65 @@ public class BeerMovementScript : MonoBehaviour {
 		speechObj.SetActive (false);
 		displayMentosText ();
 		displayBeersText ();
+		MentosScienceRoom = GameObject.Find ("MentosScience");
+
+		//Set Checkpoint Variables
+		yourLocation = self.transform.position;
+
+
+		//Science Room Positions
+		book1Loc = GameObject.Find("Book1").transform.position;
+		book2Loc = GameObject.Find("Book2").transform.position;
+		book3Loc = GameObject.Find("Book3").transform.position;
+		book4Loc = GameObject.Find("Book4").transform.position;
+		book5Loc = GameObject.Find("Book5").transform.position;
+		book6Loc = GameObject.Find("Book6").transform.position;
+		book7Loc = GameObject.Find("Book7").transform.position;
+		book8Loc = GameObject.Find("Book8").transform.position;
+		book9Loc = GameObject.Find("Book9").transform.position;
+		book10Loc = GameObject.Find("Book10").transform.position;
+		book11Loc = GameObject.Find("Book11").transform.position;
+		book12Loc = GameObject.Find("Book12").transform.position;
+		book13Loc = GameObject.Find("Book13").transform.position;
+		book14Loc = GameObject.Find("Book14").transform.position;
+		book15Loc = GameObject.Find("Book15").transform.position;
+		book16Loc = GameObject.Find("Book16").transform.position;
+		book17Loc = GameObject.Find("Book17").transform.position;
+		book18Loc = GameObject.Find("Book18").transform.position;
+		book19Loc = GameObject.Find("Book19").transform.position;
+		book20Loc = GameObject.Find("Book20").transform.position;
+		mentosScienceLoc = GameObject.FindWithTag ("Mentos").transform.position;
+		frozenBeerLoc = GameObject.Find ("FrozenBeer").transform.position;
+		magnetLoc = GameObject.Find ("magnet").transform.position;
+		saltLoc = GameObject.Find ("salt").transform.position;
+		printerLoc = GameObject.Find ("Printer").transform.position;
+
+		//Science Room Rotations
+		book1Rot = GameObject.Find("Book1").transform.eulerAngles;
+		book2Rot = GameObject.Find("Book2").transform.eulerAngles;
+		book3Rot = GameObject.Find("Book3").transform.eulerAngles;
+		book4Rot = GameObject.Find("Book4").transform.eulerAngles;
+		book5Rot = GameObject.Find("Book5").transform.eulerAngles;
+		book6Rot = GameObject.Find("Book6").transform.eulerAngles;
+		book7Rot = GameObject.Find("Book7").transform.eulerAngles;
+		book8Rot = GameObject.Find("Book8").transform.eulerAngles;
+		book9Rot= GameObject.Find("Book9").transform.eulerAngles;
+		book10Rot = GameObject.Find("Book10").transform.eulerAngles;
+		book11Rot = GameObject.Find("Book11").transform.eulerAngles;
+		book12Rot = GameObject.Find("Book12").transform.eulerAngles;
+		book13Rot = GameObject.Find("Book13").transform.eulerAngles;
+		book14Rot = GameObject.Find("Book14").transform.eulerAngles;
+		book15Rot = GameObject.Find("Book15").transform.eulerAngles;
+		book16Rot = GameObject.Find("Book16").transform.eulerAngles;
+		book17Rot = GameObject.Find("Book17").transform.eulerAngles;
+		book18Rot = GameObject.Find("Book18").transform.eulerAngles;
+		book19Rot = GameObject.Find("Book19").transform.eulerAngles;
+		book20Rot = GameObject.Find("Book20").transform.eulerAngles;
+		mentosScienceRot = GameObject.FindWithTag ("Mentos").transform.eulerAngles;
+		frozenBeerRot = GameObject.Find ("FrozenBeer").transform.eulerAngles;
+		magnetRot = GameObject.Find ("magnet").transform.eulerAngles;
+		saltRot = GameObject.Find ("salt").transform.eulerAngles;
+		printerRot = GameObject.Find ("Printer").transform.eulerAngles;
 	}
 		
 	// Update is called once per frame
@@ -173,16 +250,9 @@ public class BeerMovementScript : MonoBehaviour {
 			}
 		} else if (Input.GetMouseButtonDown (1)) {
 			Dequip ();
-		} else if (Input.GetKey ("0")) {
-			//Called to return to last checkpoint
-			GameObject.Find("Pillow").transform.position = pillowLocation;
-			GameObject.Find("Pillow").transform.eulerAngles = pillowRotation;
-			GameObject.Find ("BookPerch").transform.position = bookLocation;
-			GameObject.Find ("BookPerch").transform.eulerAngles = bookRotation;
-			GameObject.Find ("Friend2").transform.position = friendLocation;
-			GameObject.Find ("Friend2").transform.eulerAngles = friendRotation;
+		} else if (Input.GetKey ("0")) { //reset to last checkpoint
 			self.transform.position = yourLocation;
-		
+			resetCheckpointObjects ();
 		}
 	}
 
@@ -291,9 +361,14 @@ public class BeerMovementScript : MonoBehaviour {
 			StartCoroutine (say (blurb, 2));
 			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("cutscenecollider")) {
+			yourLocation = other.gameObject.transform.position;
+			Debug.Log ("Hit Cut Scene Collider");
+			level = "science";
 			StartCoroutine (startCutScene1 ());
 			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("libCutSceneCollider")) {
+			yourLocation = other.gameObject.transform.position;
+			level = "library";
 			StartCoroutine (startCutScene2 ());
 			other.gameObject.SetActive (false);
 		}
@@ -392,6 +467,74 @@ public class BeerMovementScript : MonoBehaviour {
 		displayMentosText ();
 		yield return new WaitForSeconds (3);
 		winText.text = "";
+
+	}
+
+	void resetCheckpointObjects() {
+		if (level == "library") {
+			GameObject.Find ("Pillow").transform.position = pillowLocation;
+			GameObject.Find ("Pillow").transform.eulerAngles = pillowRotation;
+			GameObject.Find ("BookPerch").transform.position = bookLocation;
+			GameObject.Find ("BookPerch").transform.eulerAngles = bookRotation;
+			GameObject.Find ("Friend2").transform.position = friendLocation;
+			GameObject.Find ("Friend2").transform.eulerAngles = friendRotation;
+		} else if (level == "science") {
+			
+			//Reset Science Room Positions
+			GameObject.Find("Book1").transform.position = book1Loc;
+			GameObject.Find("Book2").transform.position = book2Loc;
+			GameObject.Find("Book3").transform.position = book3Loc;
+			GameObject.Find("Book4").transform.position = book4Loc;
+			GameObject.Find("Book5").transform.position = book5Loc;
+			GameObject.Find("Book6").transform.position = book6Loc;
+			GameObject.Find("Book7").transform.position = book7Loc;
+			GameObject.Find("Book8").transform.position = book8Loc;
+			GameObject.Find("Book9").transform.position = book9Loc;
+			GameObject.Find("Book10").transform.position = book10Loc;
+			GameObject.Find("Book11").transform.position = book11Loc;
+			GameObject.Find("Book12").transform.position = book12Loc;
+			GameObject.Find("Book13").transform.position = book13Loc;
+			GameObject.Find("Book14").transform.position = book14Loc;
+			GameObject.Find("Book15").transform.position = book15Loc;
+			GameObject.Find("Book16").transform.position = book16Loc;
+			GameObject.Find("Book17").transform.position = book17Loc;
+			GameObject.Find("Book18").transform.position = book18Loc;
+			GameObject.Find("Book19").transform.position = book19Loc;
+			GameObject.Find("Book20").transform.position = book20Loc;
+			MentosScienceRoom.SetActive (true);
+			MentosScienceRoom.transform.position = mentosScienceLoc;
+			GameObject.Find ("FrozenBeer").transform.position = frozenBeerLoc;
+			GameObject.Find ("magnet").transform.position = magnetLoc;
+			GameObject.Find ("salt").transform.position = saltLoc;
+			GameObject.Find ("Printer").transform.position = printerLoc;
+
+			//Reset Science Room Rotations
+			GameObject.Find("Book1").transform.eulerAngles = book1Rot;
+			GameObject.Find("Book2").transform.eulerAngles = book2Rot;
+			GameObject.Find("Book3").transform.eulerAngles = book3Rot;
+			GameObject.Find("Book4").transform.eulerAngles = book4Rot;
+			GameObject.Find("Book5").transform.eulerAngles = book5Rot;
+			GameObject.Find("Book6").transform.eulerAngles = book6Rot;
+			GameObject.Find("Book7").transform.eulerAngles = book7Rot;
+			GameObject.Find("Book8").transform.eulerAngles = book8Rot;
+			GameObject.Find("Book9").transform.eulerAngles = book9Rot;
+			GameObject.Find("Book10").transform.eulerAngles = book10Rot;
+			GameObject.Find("Book11").transform.eulerAngles = book11Rot;
+			GameObject.Find("Book12").transform.eulerAngles = book12Rot;
+			GameObject.Find("Book13").transform.eulerAngles = book13Rot;
+			GameObject.Find("Book14").transform.eulerAngles = book14Rot;
+			GameObject.Find("Book15").transform.eulerAngles = book15Rot;
+			GameObject.Find("Book16").transform.eulerAngles = book16Rot;
+			GameObject.Find("Book17").transform.eulerAngles = book17Rot;
+			GameObject.Find("Book18").transform.eulerAngles = book18Rot;
+			GameObject.Find("Book19").transform.eulerAngles = book19Rot;
+			GameObject.Find("Book20").transform.eulerAngles = book20Rot;
+			MentosScienceRoom.transform.eulerAngles = mentosScienceRot;
+			GameObject.Find ("FrozenBeer").transform.eulerAngles = frozenBeerRot;
+			GameObject.Find ("magnet").transform.eulerAngles = magnetRot;
+			GameObject.Find ("salt").transform.eulerAngles = saltRot;
+			GameObject.Find ("Printer").transform.eulerAngles = printerRot;
+		}
 
 	}
 

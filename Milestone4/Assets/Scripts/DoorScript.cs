@@ -5,6 +5,7 @@ public class DoorScript : MonoBehaviour {
 
 	private Transform player;
 	private Transform key;
+	private GameObject mentos;
 
 	public delegate void DoorOpen ();
 	public static event DoorOpen onDoorOpen;
@@ -17,6 +18,7 @@ public class DoorScript : MonoBehaviour {
 	void Start () {
 		player = GameObject.FindWithTag("Player").transform;
 		key = GameObject.FindWithTag("key").transform;
+		mentos = GameObject.FindWithTag ("MentosT");
 	}
 	
 	// Update is called once per frame
@@ -36,7 +38,9 @@ public class DoorScript : MonoBehaviour {
 				if (key != null) //if key child was found, do this
 				{
 					gameObject.SetActive(false); //delete the door
+					mentos.SetActive(false); //delete Mentos in tutorial room
 					key.gameObject.SetActive(false);
+
 					onDoorOpen ();
 				}
 				else
