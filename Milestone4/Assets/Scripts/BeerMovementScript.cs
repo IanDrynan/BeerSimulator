@@ -48,6 +48,20 @@ public class BeerMovementScript : MonoBehaviour {
 	//Cameras
 	public GameObject mainCamera;
 	public GameObject cutSceneCamera;
+	public GameObject cutSceneCamera2;
+
+	//Original Positions of Objects for Checkpoint System
+	//Library Room
+	private Vector3 yourLocation = new Vector3(-88.2f, 7.9f, -58.9f);
+	private Vector3 pillowLocation = new Vector3(-152.6f, 15.78f, -50.41f);
+	private Vector3 pillowRotation = new Vector3(0,0,0);
+	private Vector3 friendLocation = new Vector3(-157.51f, 16.95f, -93.35f);
+	private Vector3 friendRotation = new Vector3 (0, 0, 0);
+	private Vector3 bookLocation = new Vector3(-157.9555f, 15.54f, -94.04861f);
+	private Vector3 bookRotation = new Vector3 (0, 270, 270);
+
+	//Science Room
+	//TODO books, mentos, beercan, magnet, salt, printer, and ur location
 
 	void Awake () {
 		self = transform;
@@ -134,19 +148,16 @@ public class BeerMovementScript : MonoBehaviour {
 		if (Input.GetMouseButtonDown (0)) {
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit, 7)) {
+			if (Physics.Raycast (ray, out hit, 7)) {
                 
-                string tag = hit.transform.gameObject.tag;
-				if (tag == "Mentos") 
-				{
+				string tag = hit.transform.gameObject.tag;
+				if (tag == "Mentos") {
 					powerUp = hit.transform.gameObject;
 					powerUpScalar = mentosScalar;
 					mentosJumpsLeft = 10;
 					hit.transform.gameObject.SetActive (false);
 					displayMentosText ();
-				} 
-				else if (tag == "MentosT") 
-				{
+				} else if (tag == "MentosT") {
 					powerUp = hit.transform.gameObject;
 					powerUpScalar = mentosScalar;
 					mentosJumpsLeft = 3;
@@ -155,16 +166,23 @@ public class BeerMovementScript : MonoBehaviour {
 
 					string blurb = "SICK. These mentos make me feel amazing! What would happen if I clicked Shift before I jump?";
 					StartCoroutine (say (blurb, 8));
-				} 
-				else if (tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor")
-                {
-                    Dequip();
-                    Equip(hit.transform.gameObject);
+				} else if (tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor") {
+					Dequip ();
+					Equip (hit.transform.gameObject);
 				} 
 			}
-		}
-		else if (Input.GetMouseButtonDown(1)) {
-			Dequip();
+		} else if (Input.GetMouseButtonDown (1)) {
+			Dequip ();
+		} else if (Input.GetKey ("0")) {
+			//Called to return to last checkpoint
+			GameObject.Find("Pillow").transform.position = pillowLocation;
+			GameObject.Find("Pillow").transform.eulerAngles = pillowRotation;
+			GameObject.Find ("BookPerch").transform.position = bookLocation;
+			GameObject.Find ("BookPerch").transform.eulerAngles = bookRotation;
+			GameObject.Find ("Friend2").transform.position = friendLocation;
+			GameObject.Find ("Friend2").transform.eulerAngles = friendRotation;
+			self.transform.position = yourLocation;
+		
 		}
 	}
 
@@ -224,8 +242,6 @@ public class BeerMovementScript : MonoBehaviour {
 		} else {
 			equippedItem.transform.localScale = new Vector3 (0.2f, 0.2f, 0.2f);
 		}
-
-
     }
 
 	void clearLevel() {
@@ -235,22 +251,6 @@ public class BeerMovementScript : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-//		if (other.gameObject.CompareTag ("Mentos")) {
-//			powerUp = other.gameObject;
-//			powerUpScalar = mentosScalar;
-//			mentosJumpsLeft = 10;
-//			other.gameObject.SetActive (false);
-//			displayMentosText ();
-//		} else if (other.gameObject.CompareTag ("MentosT")) {
-//			powerUp = other.gameObject;
-//			powerUpScalar = mentosScalar;
-//			mentosJumpsLeft = 3;
-//			other.gameObject.SetActive (false);
-//			displayMentosText ();
-//
-//			string blurb = "SICK. These mentos make me feel amazing! What would happen if I clicked Shift before I jump?";
-//			StartCoroutine (say (blurb, 8));
-//		} else 
 		if (other.gameObject.CompareTag ("movable")) { //trigger speech blurb display using child element's capsule collider 
 			GameObject otherGameObject = other.gameObject.transform.parent.gameObject;
 			string nameOfObject = otherGameObject.name;
@@ -293,13 +293,28 @@ public class BeerMovementScript : MonoBehaviour {
 		} else if (other.gameObject.CompareTag ("cutscenecollider")) {
 			StartCoroutine (startCutScene1 ());
 			other.gameObject.SetActive (false);
-//			
+		} else if (other.gameObject.CompareTag ("libCutSceneCollider")) {
+			StartCoroutine (startCutScene2 ());
+			other.gameObject.SetActive (false);
 		}
 
 	}
 
+	IEnumerator startCutScene2() {
+		mainCamera.GetComponent<Camera>().enabled = false;
+		cutSceneCamera.GetComponent<Camera> ().enabled = false;
+		cutSceneCamera2.GetComponent<Animator> ().enabled = true;
+		cutSceneCamera2.GetComponent<Camera>().enabled = true;
+		cutSceneCamera2.GetComponent<Animator> ().Play("bookshelf");
+		yield return new WaitForSeconds (17.5f);
+		mainCamera.GetComponent<Camera>().enabled = true;
+		cutSceneCamera2.GetComponent<Animator> ().enabled = false;
+		cutSceneCamera2.GetComponent<Camera>().enabled = false;
+	}
+
 	IEnumerator startCutScene1() {
 		mainCamera.GetComponent<Camera>().enabled = false;
+		cutSceneCamera2.GetComponent<Camera> ().enabled = false;
 		cutSceneCamera.GetComponent<Animator> ().enabled = true;
 		cutSceneCamera.GetComponent<Camera>().enabled = true;
 		cutSceneCamera.GetComponent<Animator> ().Play("libCutscene");
@@ -347,7 +362,7 @@ public class BeerMovementScript : MonoBehaviour {
 	}
 
 	void gameOver() {
-		StartCoroutine (displayWinText ("GAME OVER, SORRY! YOU KILLED YOUR FELLOW BEER. THE FALL WAS TOO LARGE"));
+		StartCoroutine (displayWinText ("GAME OVER, SORRY! YOU KILLED YOUR FELLOW BEER. THE FALL WAS TOO LARGE. Press 0 to Restart the Level!"));
 		//winText.text = "GAME OVER, SORRY! YOU KILLED YOUR FELLOW BEER. THE FALL WAS TOO LARGE";
 	}
 

@@ -40,7 +40,8 @@ public class CameraScript: MonoBehaviour {
 		if (Input.GetMouseButton (0)) {/*0 mouse btn izq, 1 mouse btn der*/
 			x += Input.GetAxis ("Mouse X") * mouseXSpeedMod;
 			y += Input.GetAxis ("Mouse Y") * mouseYSpeedMod;
-		}else if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+		}else
+			if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
 		{
 			float targetRotantionAngle = CameraTarget.eulerAngles.y;
 			float cameraRotationAngle = transform.eulerAngles.y;

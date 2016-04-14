@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{B4C136B4-0618-9074-7357-63732EC1DCCA}</ProjectGuid>
+    <ProjectGuid>{A8C3AECA-EBAB-C23B-3FA8-22FDCD5B13E6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -45,6 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\LibCutSceneCamera.cs" />
      <Compile Include="Assets\Scripts\BeerCanCollisionScript.cs" />
      <Compile Include="Assets\Scripts\BeerMovementScript.cs" />
      <Compile Include="Assets\Scripts\CameraScript.cs" />

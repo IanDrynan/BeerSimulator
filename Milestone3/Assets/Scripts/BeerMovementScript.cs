@@ -298,17 +298,6 @@ public class BeerMovementScript : MonoBehaviour {
 
 	}
 
-	IEnumerator startCutScene1() {
-		mainCamera.GetComponent<Camera>().enabled = false;
-		cutSceneCamera.GetComponent<Animator> ().enabled = true;
-		cutSceneCamera.GetComponent<Camera>().enabled = true;
-		cutSceneCamera.GetComponent<Animator> ().Play("libCutscene");
-		yield return new WaitForSeconds (24);
-		mainCamera.GetComponent<Camera>().enabled = true;
-		cutSceneCamera.GetComponent<Animator> ().enabled = false;
-		cutSceneCamera.GetComponent<Camera>().enabled = false;
-	}
-
 
 	void displayMentosText() {
 		powerUpText.text = "Mentos Left: " + mentosJumpsLeft.ToString ();
@@ -349,6 +338,17 @@ public class BeerMovementScript : MonoBehaviour {
 	void gameOver() {
 		StartCoroutine (displayWinText ("GAME OVER, SORRY! YOU KILLED YOUR FELLOW BEER. THE FALL WAS TOO LARGE"));
 		//winText.text = "GAME OVER, SORRY! YOU KILLED YOUR FELLOW BEER. THE FALL WAS TOO LARGE";
+	}
+
+	IEnumerator startCutScene1() {
+		mainCamera.GetComponent<Camera>().enabled = false;
+		cutSceneCamera.GetComponent<Animator> ().enabled = true;
+		cutSceneCamera.GetComponent<Camera>().enabled = true;
+		cutSceneCamera.GetComponent<Animator> ().Play("libCutscene");
+		yield return new WaitForSeconds (24);
+		mainCamera.GetComponent<Camera>().enabled = true;
+		cutSceneCamera.GetComponent<Animator> ().enabled = false;
+		cutSceneCamera.GetComponent<Camera>().enabled = false;
 	}
 
 	//display speech bubble with blurb as text for duration, time
