@@ -34,6 +34,7 @@ public class BeerMovementScript : MonoBehaviour {
 	GameObject equippedItem;
 	Vector3 equippedItemOrigPos;
 	Vector3 equippedItemOrigSize;
+    Transform equippedItemOrigParent;
 	GameObject powerUp;
 	private int mentosJumpsLeft = 0;
 
@@ -84,6 +85,7 @@ public class BeerMovementScript : MonoBehaviour {
 	void Awake () {
 		self = transform;
 		FrozenBeerScript.onFrozenBeerSaved += frozenBeerSaved;
+        FellowNattyComputerScript.onComputerBeerSaved += computerBeerSaved;
 		FellowNattyLibraryScript.onLibraryBeerSaved += libraryBeerSaved;
 		FellowNattyLibraryScript.onGameOver += gameOver;
 		DoorScript.onDoorOpen += clearLevel;
@@ -243,7 +245,7 @@ public class BeerMovementScript : MonoBehaviour {
 
 					string blurb = "SICK. These mentos make me feel amazing! What would happen if I clicked Shift before I jump?";
 					StartCoroutine (say (blurb, 8));
-				} else if (tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor") {
+				} else if (tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei") {
 					Dequip ();
 					Equip (hit.transform.gameObject);
 				} 
@@ -274,8 +276,8 @@ public class BeerMovementScript : MonoBehaviour {
         if (equippedItem)
         {
             equippedItem.GetComponent<Rigidbody>().isKinematic = false;
-            equippedItem.transform.parent = null;
-            equippedItem.transform.position = equippedItemOrigPos;
+            equippedItem.transform.parent = equippedItemOrigParent;
+            //equippedItem.transform.position = equippedItemOrigPos;
 			equippedItem.transform.localScale = equippedItemOrigSize;
             equippedItem.tag = "Respawn";
             equippedItem = null;
@@ -300,6 +302,7 @@ public class BeerMovementScript : MonoBehaviour {
 
         // attach item to bone
         equippedItem = item;
+        equippedItemOrigParent = equippedItem.transform.parent;
         equippedItemOrigPos = equippedItem.transform.position;
 		equippedItemOrigSize = equippedItem.transform.localScale;
         equippedItem.tag = "equipped";
@@ -309,7 +312,12 @@ public class BeerMovementScript : MonoBehaviour {
         equippedItem.transform.localRotation = Quaternion.identity;
 		if (equippedItem.name == "magnet") {
 			equippedItem.transform.localScale = new Vector3 (0.4f, 0.4f, 0.4f);
-		} else {
+		}
+        else if(equippedItem.name == "C++")
+        {
+            equippedItem.transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+        else {
 			equippedItem.transform.localScale = new Vector3 (0.2f, 0.2f, 0.2f);
 		}
     }
@@ -412,6 +420,7 @@ public class BeerMovementScript : MonoBehaviour {
 		
 	void onDestroy() { //unsubscribes
 		FrozenBeerScript.onFrozenBeerSaved -= frozenBeerSaved;
+        FellowNattyComputerScript.onComputerBeerSaved -= computerBeerSaved;
 		FellowNattyLibraryScript.onLibraryBeerSaved -= libraryBeerSaved;
 		FellowNattyLibraryScript.onGameOver -= gameOver;
 		DoorScript.onDoorOpen -= clearLevel;
@@ -436,7 +445,16 @@ public class BeerMovementScript : MonoBehaviour {
 		StartCoroutine (displayWinText ("Cheers. You saved your fellow Natty!"));
 	}
 
-	void gameOver() {
+    void computerBeerSaved() {
+        
+        Debug.Log("Computer Beer Saved");
+        numBeersSaved += 1;
+        displayBeersText();
+        clearLevel();
+        //displayWinText ("Cheers. Professor Beer Joins The Party!");
+        StartCoroutine(displayWinText("Cheers. Professor Beer Joins The Party!"));
+    }
+    void gameOver() {
 		StartCoroutine (displayWinText ("GAME OVER, SORRY! YOU KILLED YOUR FELLOW BEER. THE FALL WAS TOO LARGE. Press 0 to Restart the Level!"));
 		//winText.text = "GAME OVER, SORRY! YOU KILLED YOUR FELLOW BEER. THE FALL WAS TOO LARGE";
 	}
@@ -461,7 +479,7 @@ public class BeerMovementScript : MonoBehaviour {
 //	}
 //
 	IEnumerator displayWinText(string winningText) {
-		
+
 		winText.text = winningText;
 		mentosJumpsLeft = 0;
 		displayMentosText ();
