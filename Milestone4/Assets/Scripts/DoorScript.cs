@@ -34,8 +34,9 @@ public class DoorScript : MonoBehaviour {
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit, 10))
 			{
+//				string tag = hit.transform.gameObject.tag;
 				key = player.transform.Find("key");
-				if (key != null) //if key child was found, do this
+				if (hit.transform.gameObject == gameObject && key != null) //if key child was found, do this
 				{
 					gameObject.SetActive(false); //delete the door
 					mentos.SetActive(false); //delete Mentos in tutorial room
