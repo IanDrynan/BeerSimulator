@@ -374,9 +374,9 @@ public class BeerMovementScript : MonoBehaviour {
 		} else if (other.gameObject.CompareTag ("frozenText")) {
 			string blurb = "Oh noes, my buddy's frozen solid!";
 			StartCoroutine (say (blurb, 4));
-		} else if (other.gameObject.CompareTag ("helpMe")) {
-			string blurb = "HELP ME. I'M UP HERE ON TOP OF THIS BOOKSHELF! GET ME DOWN FROM HERE! IF I HIT THE GROUND, I'LL DIE. I NEED TO LAND ON SOMETHING SOFT!";
-			StartCoroutine (friendSay (blurb, 2));
+//		} else if (other.gameObject.CompareTag ("helpMe")) {
+//			string blurb = "HELP ME. I'M UP HERE ON TOP OF THIS BOOKSHELF! GET ME DOWN FROM HERE! IF I HIT THE GROUND, I'LL DIE. I NEED TO LAND ON SOMETHING SOFT!";
+//			StartCoroutine (friendSay (blurb, 2));
 		} else if (other.gameObject.CompareTag ("doorCollider1")) {
 			string blurb = "Hmmm, this door seemed lock. Maybe there's a key somewhere.";
 			StartCoroutine (say (blurb, 4));
