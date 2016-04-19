@@ -8,7 +8,7 @@ public class BeerMovementScript : MonoBehaviour {
 	private Animator anim;
 	private CharacterController controller;
 	public Transform self;
-	private GameObject speechObj;
+	public GameObject speechObj;
 	private Text speechText;
 	private GameObject friendSpeechObj;
 	private Text friendSpeechText;
@@ -51,6 +51,7 @@ public class BeerMovementScript : MonoBehaviour {
 	public GameObject mainCamera;
 	public GameObject cutSceneCamera;
 	public GameObject cutSceneCamera2;
+	public GameObject cutSceneCamera3;
 
 	//Original Positions of Objects for Checkpoint System
 //	private Vector3 yourLocation = new Vector3(-88.2f, 7.9f, -58.9f);
@@ -65,7 +66,6 @@ public class BeerMovementScript : MonoBehaviour {
 	private Vector3 bookRotation = new Vector3 (0, 270, 270);
 
 	//Science Room
-	//TODO books, mentos, beercan, magnet, salt, printer, and ur location
 	private Vector3 book1Loc, book2Loc, book3Loc, book4Loc, book5Loc, book6Loc, book7Loc, book8Loc, book9Loc, book10Loc, book11Loc, book12Loc, book13Loc, book14Loc, book15Loc, book16Loc, book17Loc, book18Loc, book19Loc, book20Loc;
 	private Vector3 mentosScienceLoc;
 	private Vector3 frozenBeerLoc;
@@ -80,8 +80,14 @@ public class BeerMovementScript : MonoBehaviour {
 	private Vector3 saltRot;
 	private Vector3 printerRot;
 
+	//Computer Room
+	//TODO friend beer can's location
+	private Vector3 computerBeerLoc;
+	private Vector3 computerBeerRot;
+
 	private string level = "tutorial";
 	private GameObject MentosScienceRoom;
+
 
 	//doors
 	GameObject scienceDoor;
@@ -101,7 +107,7 @@ public class BeerMovementScript : MonoBehaviour {
 		anim = GetComponent<Animator> ();
 		controller = GetComponent<CharacterController> ();
 		particleSys = GetComponentInChildren<ParticleSystem> ();
-		speechObj = self.FindChild("SpeechObject").gameObject;
+//		speechObj = GameObject.Find ("SpeechObject");
 		speechText = speechObj.GetComponentInChildren<Text> ();
 		friendSpeechObj = self.FindChild ("FriendSpeechObject").gameObject;
 		friendSpeechText = friendSpeechObj.GetComponentInChildren<Text> ();
@@ -170,12 +176,16 @@ public class BeerMovementScript : MonoBehaviour {
 		magnetRot = GameObject.Find ("magnet").transform.eulerAngles;
 		saltRot = GameObject.Find ("salt").transform.eulerAngles;
 		printerRot = GameObject.Find ("Printer").transform.eulerAngles;
+
+		//computer room location/rotation
+		computerBeerLoc = GameObject.Find("ComputerBeer").transform.position;
+		computerBeerRot = GameObject.Find ("ComputerBeer").transform.eulerAngles;
 	}
 		
 	// Update is called once per frame
 	void Update () {
         
-        if (Input.GetKey("w") || Input.GetKey("s")) {
+		if (Input.GetKey("w") || Input.GetKey("s") || Input.GetKey("a") || Input.GetKey("d")) {
 			anim.SetBool("rolling", true);
             if (controller.isGrounded)
             {
@@ -186,10 +196,10 @@ public class BeerMovementScript : MonoBehaviour {
             }
             
 		}
-        else if (Input.GetKey("a") || Input.GetKey("d"))
-        {
-            anim.SetBool("rolling", true);
-        }
+//        else if (Input.GetKey("a") || Input.GetKey("d"))
+//        {
+//            anim.SetBool("rolling", true);
+//        }
         else {
 			anim.SetBool("rolling", false);
             if (controller.isGrounded)
@@ -344,40 +354,40 @@ public class BeerMovementScript : MonoBehaviour {
 			GameObject otherGameObject = other.gameObject.transform.parent.gameObject;
 			string nameOfObject = otherGameObject.name;
 			string blurb = "Hmm, this " + nameOfObject + " seems movable. Why don't I walk up to it and push it?";
-			StartCoroutine (say (blurb, 3));
+			StartCoroutine (say (blurb, 4));
 //			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("powerUp")) {
 			GameObject otherGameObject = other.gameObject.transform.parent.gameObject;
 			string nameOfObject = otherGameObject.name;
 			string blurb = "Hmm, it looks like I can pick up this " + nameOfObject + ". What would happen if I tried to equip it by pressing Left Mouse Button?";
-			StartCoroutine (say (blurb, 2));
+			StartCoroutine (say (blurb, 4));
 //			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("equippable")) {
 			GameObject otherGameObject = other.gameObject.transform.parent.gameObject;
 			string nameOfObject = otherGameObject.name;
 			string blurb = "I think I can pick that " + nameOfObject + " if I get close enough. Should I equip it by pressing Left Mouse Button?";
-			StartCoroutine (say (blurb, 2));
+			StartCoroutine (say (blurb, 4));
 //			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("heatlamp")) {
 			string blurb = "Oh it's a heat lamp! Jeez Louise, it's hot, better not stay near this bad boy too long, I'm sweating!";
-			StartCoroutine (say (blurb, 3));
+			StartCoroutine (say (blurb, 4));
 		} else if (other.gameObject.CompareTag ("frozenText")) {
 			string blurb = "Oh noes, my buddy's frozen solid!";
-			StartCoroutine (say (blurb, 3));
+			StartCoroutine (say (blurb, 4));
 		} else if (other.gameObject.CompareTag ("helpMe")) {
 			string blurb = "HELP ME. I'M UP HERE ON TOP OF THIS BOOKSHELF! GET ME DOWN FROM HERE! IF I HIT THE GROUND, I'LL DIE. I NEED TO LAND ON SOMETHING SOFT!";
 			StartCoroutine (friendSay (blurb, 2));
 		} else if (other.gameObject.CompareTag ("doorCollider1")) {
 			string blurb = "Hmmm, this door seemed lock. Maybe there's a key somewhere.";
-			StartCoroutine (say (blurb, 2));
+			StartCoroutine (say (blurb, 4));
 //			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("pillow")) {
-			string blurb = "Looks like a pillow or cushion of some sort. What could that be useful for?";
-			StartCoroutine (say (blurb, 2));
+			string blurb = "Looks like a pillow or cushion of some sort. Can I maybe equip it?";
+			StartCoroutine (say (blurb, 4));
 			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("booksCollider")) {
 			string blurb = "Oh cool books! Not that I want to read them, but maybe I could shove them around or something..";
-			StartCoroutine (say (blurb, 2));
+			StartCoroutine (say (blurb, 4));
 //			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("cutscenecollider")) {
 			yourLocation = other.gameObject.transform.position;
@@ -390,17 +400,38 @@ public class BeerMovementScript : MonoBehaviour {
 			level = "library";
 			StartCoroutine (startCutScene2 ());
 			other.gameObject.SetActive (false);
+		} else if (other.gameObject.CompareTag ("tutorialChair")) {
+			string blurb = "This chair looks tall, I bet there's something on top of it! I might need something smaller to jump on first though..";
+			StartCoroutine (say (blurb, 4));
+//			other.gameObject.SetActive (false);
+		} else if (other.gameObject.CompareTag ("tutorialDesk")) {
+			string blurb = "Wonder what's on top of this table? Gosh dang it why is it so high, I wonder if there's something around me that can help..";
+			StartCoroutine (say (blurb, 4));
+//			other.gameObject.SetActive (false);
+		} else if (other.gameObject.CompareTag ("compCutSceneCollider")) {
+			yourLocation = other.gameObject.transform.position;
+			level = "computer";
+			StartCoroutine (startCutScene3 ());
+			other.gameObject.SetActive (false);
+		} else if (other.gameObject.CompareTag ("computerBooksHint")) {
+			string blurb = "Whoa, these books don't look that heavy, guess coding ain't that bad. Maybe I can equip them?";
+			StartCoroutine (say (blurb, 5));
+			other.gameObject.SetActive (false);
+		} else if (other.gameObject.CompareTag ("computerTrash")) {
+			string blurb = "This trash can looks so puny compared to a big strong Natty Light like  me. Bet I can move it around like nothin'!";
+			StartCoroutine (say (blurb, 4));
+			other.gameObject.SetActive (false);
 		}
-
 	}
 
 	IEnumerator startCutScene2() {
 		mainCamera.GetComponent<Camera>().enabled = false;
 		cutSceneCamera.GetComponent<Camera> ().enabled = false;
+		cutSceneCamera3.GetComponent<Camera> ().enabled = false;
 		cutSceneCamera2.GetComponent<Animator> ().enabled = true;
 		cutSceneCamera2.GetComponent<Camera>().enabled = true;
 		cutSceneCamera2.GetComponent<Animator> ().Play("bookshelf");
-		yield return new WaitForSeconds (17.5f);
+		yield return new WaitForSeconds (18f);
 		mainCamera.GetComponent<Camera>().enabled = true;
 		cutSceneCamera2.GetComponent<Animator> ().enabled = false;
 		cutSceneCamera2.GetComponent<Camera>().enabled = false;
@@ -409,6 +440,7 @@ public class BeerMovementScript : MonoBehaviour {
 	IEnumerator startCutScene1() {
 		mainCamera.GetComponent<Camera>().enabled = false;
 		cutSceneCamera2.GetComponent<Camera> ().enabled = false;
+		cutSceneCamera3.GetComponent<Camera> ().enabled = false;
 		cutSceneCamera.GetComponent<Animator> ().enabled = true;
 		cutSceneCamera.GetComponent<Camera>().enabled = true;
 		cutSceneCamera.GetComponent<Animator> ().Play("libCutscene");
@@ -418,6 +450,18 @@ public class BeerMovementScript : MonoBehaviour {
 		cutSceneCamera.GetComponent<Camera>().enabled = false;
 	}
 
+	IEnumerator startCutScene3() {
+		mainCamera.GetComponent<Camera>().enabled = false;
+		cutSceneCamera.GetComponent<Camera> ().enabled = false;
+		cutSceneCamera2.GetComponent<Camera> ().enabled = false;
+		cutSceneCamera3.GetComponent<Animator> ().enabled = true;
+		cutSceneCamera3.GetComponent<Camera>().enabled = true;
+		cutSceneCamera3.GetComponent<Animator> ().Play("compCutscene");
+		yield return new WaitForSeconds (25);
+		mainCamera.GetComponent<Camera>().enabled = true;
+		cutSceneCamera3.GetComponent<Animator> ().enabled = false;
+		cutSceneCamera3.GetComponent<Camera>().enabled = false;
+	}
 
 	void displayMentosText() {
 		powerUpText.text = "Mentos Left: " + mentosJumpsLeft.ToString ();
@@ -508,26 +552,26 @@ public class BeerMovementScript : MonoBehaviour {
 		} else if (level == "science") {
 			
 			//Reset Science Room Positions
-			GameObject.Find("Book1").transform.position = book1Loc;
-			GameObject.Find("Book2").transform.position = book2Loc;
-			GameObject.Find("Book3").transform.position = book3Loc;
-			GameObject.Find("Book4").transform.position = book4Loc;
-			GameObject.Find("Book5").transform.position = book5Loc;
-			GameObject.Find("Book6").transform.position = book6Loc;
-			GameObject.Find("Book7").transform.position = book7Loc;
-			GameObject.Find("Book8").transform.position = book8Loc;
-			GameObject.Find("Book9").transform.position = book9Loc;
-			GameObject.Find("Book10").transform.position = book10Loc;
-			GameObject.Find("Book11").transform.position = book11Loc;
-			GameObject.Find("Book12").transform.position = book12Loc;
-			GameObject.Find("Book13").transform.position = book13Loc;
-			GameObject.Find("Book14").transform.position = book14Loc;
-			GameObject.Find("Book15").transform.position = book15Loc;
-			GameObject.Find("Book16").transform.position = book16Loc;
-			GameObject.Find("Book17").transform.position = book17Loc;
-			GameObject.Find("Book18").transform.position = book18Loc;
-			GameObject.Find("Book19").transform.position = book19Loc;
-			GameObject.Find("Book20").transform.position = book20Loc;
+			GameObject.Find ("Book1").transform.position = book1Loc;
+			GameObject.Find ("Book2").transform.position = book2Loc;
+			GameObject.Find ("Book3").transform.position = book3Loc;
+			GameObject.Find ("Book4").transform.position = book4Loc;
+			GameObject.Find ("Book5").transform.position = book5Loc;
+			GameObject.Find ("Book6").transform.position = book6Loc;
+			GameObject.Find ("Book7").transform.position = book7Loc;
+			GameObject.Find ("Book8").transform.position = book8Loc;
+			GameObject.Find ("Book9").transform.position = book9Loc;
+			GameObject.Find ("Book10").transform.position = book10Loc;
+			GameObject.Find ("Book11").transform.position = book11Loc;
+			GameObject.Find ("Book12").transform.position = book12Loc;
+			GameObject.Find ("Book13").transform.position = book13Loc;
+			GameObject.Find ("Book14").transform.position = book14Loc;
+			GameObject.Find ("Book15").transform.position = book15Loc;
+			GameObject.Find ("Book16").transform.position = book16Loc;
+			GameObject.Find ("Book17").transform.position = book17Loc;
+			GameObject.Find ("Book18").transform.position = book18Loc;
+			GameObject.Find ("Book19").transform.position = book19Loc;
+			GameObject.Find ("Book20").transform.position = book20Loc;
 			MentosScienceRoom.SetActive (true);
 			MentosScienceRoom.transform.position = mentosScienceLoc;
 			GameObject.Find ("FrozenBeer").transform.position = frozenBeerLoc;
@@ -536,31 +580,34 @@ public class BeerMovementScript : MonoBehaviour {
 			GameObject.Find ("Printer").transform.position = printerLoc;
 
 			//Reset Science Room Rotations
-			GameObject.Find("Book1").transform.eulerAngles = book1Rot;
-			GameObject.Find("Book2").transform.eulerAngles = book2Rot;
-			GameObject.Find("Book3").transform.eulerAngles = book3Rot;
-			GameObject.Find("Book4").transform.eulerAngles = book4Rot;
-			GameObject.Find("Book5").transform.eulerAngles = book5Rot;
-			GameObject.Find("Book6").transform.eulerAngles = book6Rot;
-			GameObject.Find("Book7").transform.eulerAngles = book7Rot;
-			GameObject.Find("Book8").transform.eulerAngles = book8Rot;
-			GameObject.Find("Book9").transform.eulerAngles = book9Rot;
-			GameObject.Find("Book10").transform.eulerAngles = book10Rot;
-			GameObject.Find("Book11").transform.eulerAngles = book11Rot;
-			GameObject.Find("Book12").transform.eulerAngles = book12Rot;
-			GameObject.Find("Book13").transform.eulerAngles = book13Rot;
-			GameObject.Find("Book14").transform.eulerAngles = book14Rot;
-			GameObject.Find("Book15").transform.eulerAngles = book15Rot;
-			GameObject.Find("Book16").transform.eulerAngles = book16Rot;
-			GameObject.Find("Book17").transform.eulerAngles = book17Rot;
-			GameObject.Find("Book18").transform.eulerAngles = book18Rot;
-			GameObject.Find("Book19").transform.eulerAngles = book19Rot;
-			GameObject.Find("Book20").transform.eulerAngles = book20Rot;
+			GameObject.Find ("Book1").transform.eulerAngles = book1Rot;
+			GameObject.Find ("Book2").transform.eulerAngles = book2Rot;
+			GameObject.Find ("Book3").transform.eulerAngles = book3Rot;
+			GameObject.Find ("Book4").transform.eulerAngles = book4Rot;
+			GameObject.Find ("Book5").transform.eulerAngles = book5Rot;
+			GameObject.Find ("Book6").transform.eulerAngles = book6Rot;
+			GameObject.Find ("Book7").transform.eulerAngles = book7Rot;
+			GameObject.Find ("Book8").transform.eulerAngles = book8Rot;
+			GameObject.Find ("Book9").transform.eulerAngles = book9Rot;
+			GameObject.Find ("Book10").transform.eulerAngles = book10Rot;
+			GameObject.Find ("Book11").transform.eulerAngles = book11Rot;
+			GameObject.Find ("Book12").transform.eulerAngles = book12Rot;
+			GameObject.Find ("Book13").transform.eulerAngles = book13Rot;
+			GameObject.Find ("Book14").transform.eulerAngles = book14Rot;
+			GameObject.Find ("Book15").transform.eulerAngles = book15Rot;
+			GameObject.Find ("Book16").transform.eulerAngles = book16Rot;
+			GameObject.Find ("Book17").transform.eulerAngles = book17Rot;
+			GameObject.Find ("Book18").transform.eulerAngles = book18Rot;
+			GameObject.Find ("Book19").transform.eulerAngles = book19Rot;
+			GameObject.Find ("Book20").transform.eulerAngles = book20Rot;
 			MentosScienceRoom.transform.eulerAngles = mentosScienceRot;
 			GameObject.Find ("FrozenBeer").transform.eulerAngles = frozenBeerRot;
 			GameObject.Find ("magnet").transform.eulerAngles = magnetRot;
 			GameObject.Find ("salt").transform.eulerAngles = saltRot;
 			GameObject.Find ("Printer").transform.eulerAngles = printerRot;
+		} else if (level == "computer") {
+			GameObject.Find ("ComputerBeer").transform.position = computerBeerLoc;
+			GameObject.Find ("ComputerBeer").transform.eulerAngles = computerBeerRot;
 		}
 
 	}
