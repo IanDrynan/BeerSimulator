@@ -92,6 +92,7 @@ public class BeerMovementScript : MonoBehaviour {
 	//doors
 	GameObject scienceDoor;
 	GameObject libraryDoor;
+	GameObject computerDoor;
 
 	void Awake () {
 		self = transform;
@@ -118,6 +119,7 @@ public class BeerMovementScript : MonoBehaviour {
 		MentosScienceRoom = GameObject.Find ("MentosScience");
 		scienceDoor = GameObject.Find ("ScienceDoor");
 		libraryDoor = GameObject.Find ("LibraryDoor");
+		computerDoor = GameObject.Find ("ComputerDoor");
 
 		//Set Checkpoint Variables
 		yourLocation = self.transform.position;
@@ -421,6 +423,9 @@ public class BeerMovementScript : MonoBehaviour {
 			string blurb = "This trash can looks so puny compared to a big strong Natty Light like  me. Bet I can move it around like nothin'!";
 			StartCoroutine (say (blurb, 4));
 			other.gameObject.SetActive (false);
+		} else if (other.gameObject.CompareTag ("checkpointTag")) {
+			yourLocation = other.gameObject.transform.position;
+			other.gameObject.SetActive (false);
 		}
 	}
 
@@ -501,6 +506,7 @@ public class BeerMovementScript : MonoBehaviour {
 	}
 
     void computerBeerSaved() {
+		computerDoor.SetActive (false);
         numBeersSaved += 1;
         displayBeersText();
         clearLevel();
