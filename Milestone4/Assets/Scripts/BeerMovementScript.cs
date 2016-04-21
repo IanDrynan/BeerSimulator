@@ -48,6 +48,7 @@ public class BeerMovementScript : MonoBehaviour {
 	public Text winText;
 	public InputField passcodeInput;
 	public RawImage passcode;
+	public RawImage email;
 
 	//Cameras
 	public GameObject mainCamera;
@@ -103,6 +104,7 @@ public class BeerMovementScript : MonoBehaviour {
 		FellowNattyLibraryScript.onLibraryBeerSaved += libraryBeerSaved;
 		FellowNattyLibraryScript.onGameOver += gameOver;
 		DoorScript.onDoorOpen += clearLevel;
+		CheckPasscode.onGameWon += winGame;
 	}
 
 	// Use this for initialization
@@ -128,6 +130,7 @@ public class BeerMovementScript : MonoBehaviour {
 
 		//Set passcode to inactive
 		passcode.gameObject.SetActive(false);
+		email.gameObject.SetActive (false);
 
 
 		//Science Room Positions
@@ -275,12 +278,13 @@ public class BeerMovementScript : MonoBehaviour {
 
 					string blurb = "SICK. These mentos make me feel amazing! What would happen if I hold Shift and Space to jump?";
 					StartCoroutine (say (blurb, 8));
-				} else if (tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei") {
+				} else if (tag != "email" && tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei") {
 					Dequip ();
 					Equip (hit.transform.gameObject);
 				} else if (tag == "fridgePasscode") {
-
 					passcode.gameObject.SetActive (true);
+				} else if (tag == "email") {
+					email.gameObject.SetActive (true);
 				}
 			}
 		} else if (Input.GetMouseButtonDown (1)) {
@@ -440,7 +444,7 @@ public class BeerMovementScript : MonoBehaviour {
 		} else if (other.gameObject.CompareTag ("checkpointTag")) {
 			yourLocation = other.gameObject.transform.position;
 			other.gameObject.SetActive (false);
-		}
+		} 
 	}
 
 	IEnumerator startCutScene2() {
@@ -498,6 +502,7 @@ public class BeerMovementScript : MonoBehaviour {
 		FellowNattyLibraryScript.onLibraryBeerSaved -= libraryBeerSaved;
 		FellowNattyLibraryScript.onGameOver -= gameOver;
 		DoorScript.onDoorOpen -= clearLevel;
+		CheckPasscode.onGameWon -= winGame;
 
 	}
 	void frozenBeerSaved() {
@@ -530,6 +535,11 @@ public class BeerMovementScript : MonoBehaviour {
 
     void gameOver() {
 		StartCoroutine (displayWinText ("GAME OVER, SORRY! YOU KILLED YOUR FELLOW BEER. THE GROUND WAS TOO HARD TO FALL ON. Press 0 to Restart the Level!"));
+	}
+
+	void winGame() {
+		StartCoroutine (displayWinText ("YOU SAVED ALL YOUR FRIENDS AND WON THE GAME!"));
+		particleSys.Play ();
 	}
 
 	//display speech bubble with blurb as text for duration, time
