@@ -55,6 +55,7 @@ public class BeerMovementScript : MonoBehaviour {
 	public GameObject cutSceneCamera;
 	public GameObject cutSceneCamera2;
 	public GameObject cutSceneCamera3;
+	public GameObject cutSceneCamera4;
 
 	//Original Positions of Objects for Checkpoint System
 //	private Vector3 yourLocation = new Vector3(-88.2f, 7.9f, -58.9f);
@@ -278,14 +279,14 @@ public class BeerMovementScript : MonoBehaviour {
 
 					string blurb = "SICK. These mentos make me feel amazing! What would happen if I hold Shift and Space to jump?";
 					StartCoroutine (say (blurb, 8));
-				} else if (tag != "email" && tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei") {
+				} else if (tag != "emailHint" && tag != "email" && tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei") {
 					Dequip ();
 					Equip (hit.transform.gameObject);
 				} else if (tag == "fridgePasscode") {
 					passcode.gameObject.SetActive (true);
-				} else if (tag == "email") {
+				} else if (tag == "email" || tag == "emailHint") {
 					email.gameObject.SetActive (true);
-				}
+				} 
 			}
 		} else if (Input.GetMouseButtonDown (1)) {
 			Dequip ();
@@ -444,13 +445,25 @@ public class BeerMovementScript : MonoBehaviour {
 		} else if (other.gameObject.CompareTag ("checkpointTag")) {
 			yourLocation = other.gameObject.transform.position;
 			other.gameObject.SetActive (false);
-		} 
+		} else if (other.gameObject.CompareTag ("emailHint")) {
+			string blurb = "What's this on the floor? Looks like an important email snippet. Why don't I take a closer look by clicking on it?";
+			StartCoroutine (say (blurb, 4));
+		} else if (other.gameObject.CompareTag ("loungeCutSceneCollider")) {
+			yourLocation = other.gameObject.transform.position;
+			level = "lounge";
+			StartCoroutine (startCutScene4 ());
+			other.gameObject.SetActive (false);
+		} else if (other.gameObject.CompareTag ("fridgeHint")) {
+			string blurb = "Hmm, looks like I need a password for this fridge. I bet I can interact with the password screen if I get closer to it and click on it.";
+			StartCoroutine (say (blurb, 4));
+		}
 	}
 
 	IEnumerator startCutScene2() {
 		mainCamera.GetComponent<Camera>().enabled = false;
 		cutSceneCamera.GetComponent<Camera> ().enabled = false;
 		cutSceneCamera3.GetComponent<Camera> ().enabled = false;
+		cutSceneCamera4.GetComponent<Camera>().enabled = false;
 		cutSceneCamera2.GetComponent<Animator> ().enabled = true;
 		cutSceneCamera2.GetComponent<Camera>().enabled = true;
 		cutSceneCamera2.GetComponent<Animator> ().Play("bookshelf");
@@ -464,6 +477,7 @@ public class BeerMovementScript : MonoBehaviour {
 		mainCamera.GetComponent<Camera>().enabled = false;
 		cutSceneCamera2.GetComponent<Camera> ().enabled = false;
 		cutSceneCamera3.GetComponent<Camera> ().enabled = false;
+		cutSceneCamera4.GetComponent<Camera>().enabled = false;
 		cutSceneCamera.GetComponent<Animator> ().enabled = true;
 		cutSceneCamera.GetComponent<Camera>().enabled = true;
 		cutSceneCamera.GetComponent<Animator> ().Play("libCutscene");
@@ -477,6 +491,7 @@ public class BeerMovementScript : MonoBehaviour {
 		mainCamera.GetComponent<Camera>().enabled = false;
 		cutSceneCamera.GetComponent<Camera> ().enabled = false;
 		cutSceneCamera2.GetComponent<Camera> ().enabled = false;
+		cutSceneCamera4.GetComponent<Camera>().enabled = false;
 		cutSceneCamera3.GetComponent<Animator> ().enabled = true;
 		cutSceneCamera3.GetComponent<Camera>().enabled = true;
 		cutSceneCamera3.GetComponent<Animator> ().Play("compCutscene");
@@ -484,6 +499,20 @@ public class BeerMovementScript : MonoBehaviour {
 		mainCamera.GetComponent<Camera>().enabled = true;
 		cutSceneCamera3.GetComponent<Animator> ().enabled = false;
 		cutSceneCamera3.GetComponent<Camera>().enabled = false;
+	}
+
+	IEnumerator startCutScene4() {
+		mainCamera.GetComponent<Camera>().enabled = false;
+		cutSceneCamera.GetComponent<Camera> ().enabled = false;
+		cutSceneCamera2.GetComponent<Camera> ().enabled = false;
+		cutSceneCamera3.GetComponent<Animator> ().enabled = false;
+		cutSceneCamera4.GetComponent<Camera>().enabled = true;
+		cutSceneCamera4.GetComponent<Animator> ().enabled = true;
+		cutSceneCamera4.GetComponent<Animator> ().Play("loungeCutscene");
+		yield return new WaitForSeconds (20);
+		mainCamera.GetComponent<Camera>().enabled = true;
+		cutSceneCamera4.GetComponent<Animator> ().enabled = false;
+		cutSceneCamera4.GetComponent<Camera>().enabled = false;
 	}
 
 	void displayMentosText() {
