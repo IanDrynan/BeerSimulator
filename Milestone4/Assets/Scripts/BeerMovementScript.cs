@@ -33,7 +33,7 @@ public class BeerMovementScript : MonoBehaviour {
 	//PowerUps/Equipped Items
 	GameObject equippedItem;
 	string equippedItemPrevTag;
-	Vector3 equippedItemOrigPos;
+	//Vector3 equippedItemOrigPos;
 	Vector3 equippedItemOrigSize;
     Transform equippedItemOrigParent;
 	GameObject powerUp;
@@ -46,6 +46,8 @@ public class BeerMovementScript : MonoBehaviour {
 	public Text powerUpText;
 	public Text beersSavedText;
 	public Text winText;
+	public InputField passcodeInput;
+	public RawImage passcode;
 
 	//Cameras
 	public GameObject mainCamera;
@@ -124,6 +126,9 @@ public class BeerMovementScript : MonoBehaviour {
 		//Set Checkpoint Variables
 		yourLocation = self.transform.position;
 
+		//Set passcode to inactive
+		passcode.gameObject.SetActive(false);
+
 
 		//Science Room Positions
 		book1Loc = GameObject.Find("Book1").transform.position;
@@ -186,57 +191,62 @@ public class BeerMovementScript : MonoBehaviour {
 		
 	// Update is called once per frame
 	void Update () {
-        
-		if (Input.GetKey("w") || Input.GetKey("s") || Input.GetKey("a") || Input.GetKey("d")) {
-			anim.SetBool("rolling", true);
-            if (controller.isGrounded)
-            {
-                if (speed < maxSpeed)
-                {
-                    speed += acceleration;
-                }
-            }
-            
-		}
-//        else if (Input.GetKey("a") || Input.GetKey("d"))
-//        {
-//            anim.SetBool("rolling", true);
-//        }
-        else {
-			anim.SetBool("rolling", false);
-            if (controller.isGrounded)
-            {
-                speed = baseSpeed;
-            }
-		}
+		if (passcode.IsActive ()) {
+			 
+		} else {
+			if (Input.GetKey("w") || Input.GetKey("s") || Input.GetKey("a") || Input.GetKey("d")) {
+				anim.SetBool("rolling", true);
+				if (controller.isGrounded)
+				{
+					if (speed < maxSpeed)
+					{
+						speed += acceleration;
+					}
+				}
 
-		if (controller.isGrounded) {
-			particleSys.Stop ();
-			gravity = 4.0f;
-		} 
+			}
+			//        else if (Input.GetKey("a") || Input.GetKey("d"))
+			//        {
+			//            anim.SetBool("rolling", true);
+			//        }
+			else {
+				anim.SetBool("rolling", false);
+				if (controller.isGrounded)
+				{
+					speed = baseSpeed;
+				}
+			}
+
+			if (controller.isGrounded) {
+				particleSys.Stop ();
+				gravity = 4.0f;
+			} 
 			moveDirection = transform.forward * Input.GetAxis ("Vertical") * speed;
 			float turn = Input.GetAxis ("Horizontal");
 			transform.Rotate (0, turn * turnSpeed * Time.deltaTime, 0);
-		if (controller.isGrounded && Input.GetKeyDown ("space")) {
-			vertVel = jumpSpeed;
-			gravity = 30f;
-			particleSys.Play (); 
-			if (Input.GetKey("left shift") && mentosJumpsLeft > 0) {
-				StartCoroutine (say("WAHOOOOO", 2));
-				mentosJumpsLeft -= 1;
-				vertVel *= powerUpScalar;
-				if (powerUp && mentosJumpsLeft <= 0) {
-					//Out of Mentos Jumps
-					powerUpScalar = 1;
-					powerUp.SetActive (true);
-					powerUp = null;
+			if (controller.isGrounded && Input.GetKeyDown ("space")) {
+				vertVel = jumpSpeed;
+				gravity = 30f;
+				particleSys.Play (); 
+				if (Input.GetKey("left shift") && mentosJumpsLeft > 0) {
+					StartCoroutine (say("WAHOOOOO", 2));
+					mentosJumpsLeft -= 1;
+					vertVel *= powerUpScalar;
+					if (powerUp && mentosJumpsLeft <= 0) {
+						//Out of Mentos Jumps
+						powerUpScalar = 1;
+						powerUp.SetActive (true);
+						powerUp = null;
+					}
+					displayMentosText ();
 				}
-				displayMentosText ();
-			}
-		} 
-		vertVel -= gravity * Time.deltaTime;
-		moveDirection.y = vertVel;
-		controller.Move (moveDirection * Time.deltaTime);
+			} 
+			vertVel -= gravity * Time.deltaTime;
+			moveDirection.y = vertVel;
+			controller.Move (moveDirection * Time.deltaTime);
+		}
+        
+	
 	}
 
 	void FixedUpdate() {
@@ -246,9 +256,10 @@ public class BeerMovementScript : MonoBehaviour {
 		if (Input.GetMouseButtonDown (0)) {
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 			RaycastHit hit;
-			if (Physics.Raycast (ray, out hit, 7)) {
+			if (Physics.Raycast (ray, out hit, 10)) {
                 
 				string tag = hit.transform.gameObject.tag;
+				Debug.Log ("tag : " + tag);
 				if (tag == "Mentos") {
 					powerUp = hit.transform.gameObject;
 					powerUpScalar = mentosScalar;
@@ -264,10 +275,13 @@ public class BeerMovementScript : MonoBehaviour {
 
 					string blurb = "SICK. These mentos make me feel amazing! What would happen if I hold Shift and Space to jump?";
 					StartCoroutine (say (blurb, 8));
-				} else if (tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei") {
+				} else if (tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei") {
 					Dequip ();
 					Equip (hit.transform.gameObject);
-				} 
+				} else if (tag == "fridgePasscode") {
+
+					passcode.gameObject.SetActive (true);
+				}
 			}
 		} else if (Input.GetMouseButtonDown (1)) {
 			Dequip ();
@@ -300,7 +314,7 @@ public class BeerMovementScript : MonoBehaviour {
 			equippedItem.transform.localScale = equippedItemOrigSize;
 			equippedItem.tag = equippedItemPrevTag;
             equippedItem = null;
-            equippedItemOrigPos = Vector3.zero;
+//            equippedItemOrigPos = Vector3.zero;
 			equippedItemOrigSize = Vector3.zero;
 		
         }
@@ -326,7 +340,7 @@ public class BeerMovementScript : MonoBehaviour {
         equippedItem = item;
 		equippedItemPrevTag = itemTag;
         equippedItemOrigParent = equippedItem.transform.parent;
-        equippedItemOrigPos = equippedItem.transform.position;
+//        equippedItemOrigPos = equippedItem.transform.position;
 		equippedItemOrigSize = equippedItem.transform.localScale;
         equippedItem.tag = "equipped";
         equippedItem.transform.parent = self.transform;
