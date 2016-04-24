@@ -226,8 +226,8 @@ public class BeerMovementScript : MonoBehaviour {
 				gravity = 4.0f;
 			} 
 			moveDirection = transform.forward * Input.GetAxis ("Vertical") * speed;
-			float turn = Input.GetAxis ("Horizontal");
-			transform.Rotate (0, turn * turnSpeed * Time.deltaTime, 0);
+			//float turn = Input.GetAxis ("Horizontal");
+			//transform.Rotate (0, turn * turnSpeed * Time.deltaTime, 0);
 			if (controller.isGrounded && Input.GetKeyDown ("space")) {
 				vertVel = jumpSpeed;
 				gravity = 30f;
