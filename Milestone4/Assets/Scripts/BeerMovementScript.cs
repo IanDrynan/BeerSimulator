@@ -198,7 +198,7 @@ public class BeerMovementScript : MonoBehaviour {
 		if (passcode.IsActive ()) {
 			 
 		} else {
-			if (Input.GetKey("w") || Input.GetKey("s") || Input.GetKey("a") || Input.GetKey("d")) {
+			if (Input.GetKey("w") || Input.GetKey("s") /*|| Input.GetKey("a") || Input.GetKey("d")*/) {
 				anim.SetBool("rolling", true);
 				if (controller.isGrounded)
 				{

@@ -6,12 +6,12 @@ public class CameraScript: MonoBehaviour {
 	private float x = 0.0f;
 	private float y = 0.0f;
 
-	private int mouseXSpeedMod = 5;
-	private int mouseYSpeedMod = 5;
+	private int mouseXSpeedMod = 2;
+	private int mouseYSpeedMod = 2;
 
 	public float MaxViewDistance = 15f;
 	public float MinViewDistance = 1f;
-	public int ZoomRate = 20;
+	public int ZoomRate;
 	private int lerpRate = 5;
 	private float distance = 3f;
 	private float desireDistance;
@@ -35,20 +35,26 @@ public class CameraScript: MonoBehaviour {
 		correctedDistance = distance;
 	}
 
+    void Update()
+    {
+        x += Input.GetAxis("Mouse X") * mouseXSpeedMod;
+        y += -Input.GetAxis("Mouse Y") * mouseYSpeedMod;
+    }
 	// Update is called once per frame
 	void LateUpdate () {
-		if (Input.GetMouseButton (0)) {/*0 mouse btn izq, 1 mouse btn der*/
-			x += Input.GetAxis ("Mouse X") * mouseXSpeedMod;
-			y += Input.GetAxis ("Mouse Y") * mouseYSpeedMod;
-		}else
-			if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
-		{
-			float targetRotantionAngle = CameraTarget.eulerAngles.y;
-			float cameraRotationAngle = transform.eulerAngles.y;
-			x = Mathf.LerpAngle(cameraRotationAngle,targetRotantionAngle, lerpRate * Time.deltaTime);
-		}
 
-		y = ClampAngle (y, -30, 90);
+        /*if (Input.GetMouseButton (0)) {//0 mouse btn izq, 1 mouse btn der
+             x += Input.GetAxis("Mouse X") * mouseXSpeedMod;
+            y += Input.GetAxis("Mouse Y") * mouseYSpeedMod;
+        }else
+            if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+        {
+            float targetRotantionAngle = CameraTarget.eulerAngles.y;
+            float cameraRotationAngle = transform.eulerAngles.y;
+            x = Mathf.LerpAngle(cameraRotationAngle,targetRotantionAngle, lerpRate * Time.deltaTime);
+        }*/
+
+        y = ClampAngle (y, -30, 90);
 		Quaternion rotation = Quaternion.Euler (y,x,0);
 
 		desireDistance -= Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * ZoomRate * Mathf.Abs(desireDistance);
