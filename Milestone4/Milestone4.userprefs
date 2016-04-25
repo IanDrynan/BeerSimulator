@@ -2,8 +2,12 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BeerMovementScript.cs">
     <Files>
-      <File FileName="Assets/Scripts/CheckPasscode.cs" Line="26" Column="40" />
-      <File FileName="Assets/Scripts/BeerMovementScript.cs" Line="457" Column="155" />
+      <File FileName="Assets/Computer classroom/Standard Assets/Utility/TimedObjectActivator.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/BeerMovementScript.cs" Line="434" Column="39" />
+      <File FileName="Assets/Scripts/CheckPasscode.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/CameraScript.cs" Line="162" Column="26" />
+      <File FileName="Assets/Scripts/OrganizeAlphanumeric.cs" Line="2" Column="4" />
+      <File FileName="Assets/Scripts/BeerCanCollisionScript.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

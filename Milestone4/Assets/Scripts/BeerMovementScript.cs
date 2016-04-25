@@ -424,7 +424,7 @@ public class BeerMovementScript : MonoBehaviour {
 			StartCoroutine (say (blurb, 4));
 			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("booksCollider")) {
-			string blurb = "Oh cool books! Not that I want to read them, but maybe I could shove them around or pick them up..";
+			string blurb = "Oh cool books! Not that I want to read them, but maybe I could equip them and move them around..";
 			StartCoroutine (say (blurb, 4));
 //			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("cutscenecollider")) {
