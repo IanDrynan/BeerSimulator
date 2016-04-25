@@ -102,7 +102,8 @@ public class BeerMovementScript : MonoBehaviour {
 		self = transform;
 		FrozenBeerScript.onFrozenBeerSaved += frozenBeerSaved;
         FellowNattyComputerScript.onComputerBeerSaved += computerBeerSaved;
-		FellowNattyLibraryScript.onLibraryBeerSaved += libraryBeerSaved;
+        FellowNattyTutorialScript.onTutorialBeerSaved += tutorialBeerSaved;
+        FellowNattyLibraryScript.onLibraryBeerSaved += libraryBeerSaved;
 		FellowNattyLibraryScript.onGameOver += gameOver;
 		DoorScript.onDoorOpen += clearLevel;
 		CheckPasscode.onGameWon += winGame;
@@ -122,9 +123,9 @@ public class BeerMovementScript : MonoBehaviour {
 		displayMentosText ();
 		displayBeersText ();
 		MentosScienceRoom = GameObject.Find ("MentosScience");
-		scienceDoor = GameObject.Find ("ScienceDoor");
-		libraryDoor = GameObject.Find ("LibraryDoor");
-		computerDoor = GameObject.Find ("ComputerDoor");
+		scienceDoor = GameObject.Find ("door_science");
+		libraryDoor = GameObject.Find ("door_library");
+		computerDoor = GameObject.Find ("door_computer");
 
 		//Set Checkpoint Variables
 		yourLocation = self.transform.position;
@@ -279,7 +280,7 @@ public class BeerMovementScript : MonoBehaviour {
 
 					string blurb = "SICK. These mentos make me feel amazing! What would happen if I hold Shift and Space to jump?";
 					StartCoroutine (say (blurb, 8));
-				} else if (tag != "emailHint" && tag != "email" && tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei") {
+				} else if (tag != "emailHint" && tag != "email" && tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei" && tag != "TutorialBeer") {
 					Dequip ();
 					Equip (hit.transform.gameObject);
 				} else if (tag == "fridgePasscode") {
@@ -319,7 +320,7 @@ public class BeerMovementScript : MonoBehaviour {
 			equippedItem.transform.localScale = equippedItemOrigSize;
 			equippedItem.tag = equippedItemPrevTag;
             equippedItem = null;
-//            equippedItemOrigPos = Vector3.zero;
+//          equippedItemOrigPos = Vector3.zero;
 			equippedItemOrigSize = Vector3.zero;
 		
         }
@@ -345,7 +346,6 @@ public class BeerMovementScript : MonoBehaviour {
         equippedItem = item;
 		equippedItemPrevTag = itemTag;
         equippedItemOrigParent = equippedItem.transform.parent;
-//        equippedItemOrigPos = equippedItem.transform.position;
 		equippedItemOrigSize = equippedItem.transform.localScale;
         equippedItem.tag = "equipped";
         equippedItem.transform.parent = self.transform;
@@ -358,6 +358,10 @@ public class BeerMovementScript : MonoBehaviour {
         else if(equippedItem.name == "C++")
         {
             equippedItem.transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+        else if(equippedItemPrevTag == "book")
+        {
+            equippedItem.transform.localScale = new Vector3(2f, 2f, 2f);
         }
         else {
 			equippedItem.transform.localScale = new Vector3 (0.2f, 0.2f, 0.2f);
@@ -386,7 +390,7 @@ public class BeerMovementScript : MonoBehaviour {
 		} else if (other.gameObject.CompareTag ("equippable")) {
 			GameObject otherGameObject = other.gameObject.transform.parent.gameObject;
 			string nameOfObject = otherGameObject.name;
-			string blurb = "I think I can pick that " + nameOfObject + " if I get close enough. Should I equip it by pressing Left Mouse Button?";
+			string blurb = "I think I can pick that " + nameOfObject + " if I get close enough. Should I pick it up by pressing Left Mouse Button? (Right Mouse Button to drop the " + nameOfObject + ")";
 			StartCoroutine (say (blurb, 4));
 //			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("heatlamp")) {
@@ -399,15 +403,15 @@ public class BeerMovementScript : MonoBehaviour {
 //			string blurb = "HELP ME. I'M UP HERE ON TOP OF THIS BOOKSHELF! GET ME DOWN FROM HERE! IF I HIT THE GROUND, I'LL DIE. I NEED TO LAND ON SOMETHING SOFT!";
 //			StartCoroutine (friendSay (blurb, 2));
 		} else if (other.gameObject.CompareTag ("doorCollider1")) {
-			string blurb = "Hmmm, this door seemed lock. Maybe there's a key somewhere.";
+			string blurb = "Hmmm, this door seems locked. Maybe there's a key somewhere.";
 			StartCoroutine (say (blurb, 4));
 //			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("pillow")) {
-			string blurb = "Looks like a pillow or cushion of some sort. Can I maybe equip it?";
+			string blurb = "Looks like a pillow or cushion of some sort. Can I maybe pick it up?";
 			StartCoroutine (say (blurb, 4));
 			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("booksCollider")) {
-			string blurb = "Oh cool books! Not that I want to read them, but maybe I could shove them around or something..";
+			string blurb = "Oh cool books! Not that I want to read them, but maybe I could shove them around or pick them up..";
 			StartCoroutine (say (blurb, 4));
 //			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("cutscenecollider")) {
@@ -528,15 +532,16 @@ public class BeerMovementScript : MonoBehaviour {
 	void onDestroy() { //unsubscribes
 		FrozenBeerScript.onFrozenBeerSaved -= frozenBeerSaved;
         FellowNattyComputerScript.onComputerBeerSaved -= computerBeerSaved;
-		FellowNattyLibraryScript.onLibraryBeerSaved -= libraryBeerSaved;
+        FellowNattyTutorialScript.onTutorialBeerSaved -= tutorialBeerSaved;
+        FellowNattyLibraryScript.onLibraryBeerSaved -= libraryBeerSaved;
 		FellowNattyLibraryScript.onGameOver -= gameOver;
 		DoorScript.onDoorOpen -= clearLevel;
 		CheckPasscode.onGameWon -= winGame;
 
 	}
 	void frozenBeerSaved() {
-		scienceDoor.SetActive(false);
-		numBeersSaved += 1;
+		scienceDoor.transform.Rotate(Vector3.up, 95);
+        numBeersSaved += 1;
 		displayBeersText ();
 		clearLevel ();
 		//displayWinText ("Cheers. You saved your frozen friend! Nice job, Elsa. Your friend had stolen a key right before he was frozen and you have unlocked the next room!");
@@ -545,8 +550,8 @@ public class BeerMovementScript : MonoBehaviour {
 	}
 
 	void libraryBeerSaved() {
-		libraryDoor.SetActive(false);
-		numBeersSaved += 1;
+		libraryDoor.transform.Rotate(Vector3.up, 95);
+        numBeersSaved += 1;
 		displayBeersText ();
 		clearLevel ();
 		//displayWinText ("Cheers. You saved your fellow Natty!");
@@ -554,12 +559,19 @@ public class BeerMovementScript : MonoBehaviour {
 	}
 
     void computerBeerSaved() {
-		computerDoor.SetActive (false);
+		computerDoor.transform.Rotate(Vector3.up, 95);
         numBeersSaved += 1;
         displayBeersText();
         clearLevel();
         //displayWinText ("Cheers. Professor Beer Joins The Party!");
         StartCoroutine(displayWinText("Cheers. Professor Beer Joins The Party!"));
+    }
+
+    void tutorialBeerSaved()
+    {
+        numBeersSaved += 1;
+        displayBeersText();
+        StartCoroutine(displayWinText("One down 5 to go"));
     }
 
     void gameOver() {

@@ -7,6 +7,7 @@ public class FellowNattyComputerScript : MonoBehaviour
     public Transform self;
     public Transform book = null;
     public Transform player;
+    public GameObject sensei;
 
     public delegate void ComputerBeerSaved();
     public static event ComputerBeerSaved onComputerBeerSaved;
@@ -20,6 +21,7 @@ public class FellowNattyComputerScript : MonoBehaviour
     void Start()
     {
         player = GameObject.FindWithTag("Player").transform;
+        sensei = GameObject.FindWithTag("BeerSensei");
     }
 
     // Update is called once per frame
@@ -34,14 +36,14 @@ public class FellowNattyComputerScript : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit, 10))
             {
                 book = player.FindChild("C++");
                 if (book != null) //if C++ child was found, do this
                 {
                     if (hit.transform.gameObject.tag == "BeerSensei")
                     {
-                        gameObject.SetActive(false);
+                        sensei.SetActive(false);
                         if (onComputerBeerSaved != null)
                         {
                             onComputerBeerSaved();
