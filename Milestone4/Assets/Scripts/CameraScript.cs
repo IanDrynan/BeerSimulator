@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class CameraScript: MonoBehaviour {
+
+	public Texture2D crosshairTexture;
+
 	public Transform CameraTarget;
 	private float x = 0.0f;
 	private float y = 0.0f;
@@ -13,7 +16,7 @@ public class CameraScript: MonoBehaviour {
 	public float MaxViewDistance = 15f;
 	public float MinViewDistance = 1f;
 	public int ZoomRate;
-	private int lerpRate = 5;
+//	private int lerpRate = 5;
 	private float distance = 3f;
 	private float desireDistance;
 	private float correctedDistance;
@@ -28,6 +31,11 @@ public class CameraScript: MonoBehaviour {
 	//stores cameras distance from player
 	private float curDist = 0;
 
+	void Awake () {
+		wantedMode = CursorLockMode.Locked;
+		Cursor.visible = false;
+	}
+
 	// Use this for initialization
 	void Start () {
 		Vector3 Angles = transform.eulerAngles;
@@ -38,14 +46,15 @@ public class CameraScript: MonoBehaviour {
 		correctedDistance = distance;
 
         wantedMode = CursorLockMode.Locked;
-        Cursor.visible = true;
+//        Cursor.visible = true;
+		Cursor.lockState = wantedMode;
+		Cursor.visible = false;
         
 	}
 
 
 	// Update is called once per frame
-	void LateUpdate () {
-        
+	void Update () {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (Time.timeScale == 0)
@@ -63,6 +72,8 @@ public class CameraScript: MonoBehaviour {
         if (Time.timeScale == 1)
         {
             controlsText.enabled = false;
+			Cursor.visible = false;
+//			Screen.lockCursor = true;
             x += Input.GetAxis("Mouse X") * mouseXSpeedMod;
             y += -Input.GetAxis("Mouse Y") * mouseYSpeedMod;
             /*if (Input.GetMouseButton (0)) {//0 mouse btn izq, 1 mouse btn der
@@ -142,9 +153,18 @@ public class CameraScript: MonoBehaviour {
         }
 
 	}
+
+
     void OnGUI()
     {
-        GUI.Box(new Rect(Screen.width / 2, Screen.height / 2, 10, 10),"");
+//		GUI.color = Color.white;
+//		GUI.backgroundColor = Color.white;
+//		Texture2D texture = new Texture2D(1, 1);
+//		texture.SetPixel(0,0,Color.white);
+//		texture.Apply();
+//		GUI.skin.box.normal.background = texture;
+
+		GUI.Box(new Rect((Screen.width - crosshairTexture.width) / 2, (Screen.height - crosshairTexture.height - 70) / 2, crosshairTexture.width, crosshairTexture.height), crosshairTexture);
     }
 
 	private static float ClampAngle(float angle, float min, float max)

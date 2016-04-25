@@ -110,6 +110,8 @@ public class BeerMovementScript : MonoBehaviour {
 		FellowNattyLibraryScript.onGameOver += gameOver;
 		DoorScript.onDoorOpen += clearLevel;
 		CheckPasscode.onGameWon += winGame;
+//		Cursor.lockState = CursorLockMode.Locked;
+
 	}
 
 	// Use this for initialization
@@ -129,6 +131,7 @@ public class BeerMovementScript : MonoBehaviour {
 		scienceDoor = GameObject.Find ("door_science");
 		libraryDoor = GameObject.Find ("door_library");
 		computerDoor = GameObject.Find ("door_computer");
+//		Cursor.lockState = CursorLockMode.Locked;
 
 		//Set Checkpoint Variables
 		yourLocation = self.transform.position;
@@ -283,8 +286,9 @@ public class BeerMovementScript : MonoBehaviour {
 
 					string blurb = "SICK. These mentos make me feel amazing! What would happen if I hold Shift and Space to jump?";
 					StartCoroutine (say (blurb, 8));
-<
-				} else if (tag != "Untagged" && tag != "emailHint" && tag != "email" && tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei" && tag != "TutorialBeer") {
+
+				}  
+				else if (tag != "Untagged" && tag != "emailHint" && tag != "email" && tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei" && tag != "TutorialBeer") {
 
 					Dequip ();
 					Equip (hit.transform.gameObject);

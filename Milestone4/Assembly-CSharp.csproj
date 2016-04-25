@@ -133,6 +133,8 @@
      <Compile Include="Assets\Scripts\DoorScript.cs" />
      <Compile Include="Assets\Scripts\FellowNattyComputerScript.cs" />
      <Compile Include="Assets\Scripts\FellowNattyLibraryScript.cs" />
+     <Compile Include="Assets\Scripts\FellowNattyTutorial.cs" />
+     <Compile Include="Assets\Scripts\FellowNattyTutorialScript.cs" />
      <Compile Include="Assets\Scripts\FrozenBeerScript.cs" />
      <Compile Include="Assets\Scripts\KeyScript.cs" />
      <Compile Include="Assets\Scripts\LibCutSceneCamera.cs" />
