@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class CheckPasscode : MonoBehaviour {
 
 	public InputField input;
+	public GameObject passCodeScreen;
 
 	public delegate void GameWon ();
 	public static event GameWon onGameWon;
@@ -19,7 +20,7 @@ public class CheckPasscode : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 
 	void check(string arg0) {

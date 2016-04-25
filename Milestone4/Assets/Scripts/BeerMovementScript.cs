@@ -287,6 +287,10 @@ public class BeerMovementScript : MonoBehaviour {
 					Equip (hit.transform.gameObject);
 				} else if (tag == "fridgePasscode") {
 					passcode.gameObject.SetActive (true);
+					passcodeInput.ActivateInputField ();
+					passcodeInput.Select ();
+					passcodeInput.text = "Enter text here and press enter key when done...";
+				
 				} else if (tag == "email" || tag == "emailHint") {
 					email.gameObject.SetActive (true);
 				} 
