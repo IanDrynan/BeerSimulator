@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class CameraScript: MonoBehaviour {
 	public Transform CameraTarget;
@@ -19,7 +20,7 @@ public class CameraScript: MonoBehaviour {
 	private float currentDistance;
 
 	public float cameraTargetHeight = 1.0f;
-
+    public Text controlsText;
     CursorLockMode wantedMode;
 
 	//checks if first person mode is on
@@ -38,6 +39,7 @@ public class CameraScript: MonoBehaviour {
 
         wantedMode = CursorLockMode.Locked;
         Cursor.visible = true;
+        
 	}
 
 
@@ -60,6 +62,7 @@ public class CameraScript: MonoBehaviour {
         Cursor.lockState = wantedMode;
         if (Time.timeScale == 1)
         {
+            controlsText.enabled = false;
             x += Input.GetAxis("Mouse X") * mouseXSpeedMod;
             y += -Input.GetAxis("Mouse Y") * mouseYSpeedMod;
             /*if (Input.GetMouseButton (0)) {//0 mouse btn izq, 1 mouse btn der
@@ -135,6 +138,7 @@ public class CameraScript: MonoBehaviour {
         else
         {
             Cursor.visible = true;
+            controlsText.enabled = true;
         }
 
 	}

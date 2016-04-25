@@ -98,6 +98,9 @@ public class BeerMovementScript : MonoBehaviour {
 	GameObject libraryDoor;
 	GameObject computerDoor;
 
+    //GUI Textures
+    public Texture mentosTexture;
+
 	void Awake () {
 		self = transform;
 		FrozenBeerScript.onFrozenBeerSaved += frozenBeerSaved;
@@ -279,7 +282,7 @@ public class BeerMovementScript : MonoBehaviour {
 
 					string blurb = "SICK. These mentos make me feel amazing! What would happen if I hold Shift and Space to jump?";
 					StartCoroutine (say (blurb, 8));
-				} else if (tag != "emailHint" && tag != "email" && tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei") {
+				} else if (tag != "Untagged" && tag != "emailHint" && tag != "email" && tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei") {
 					Dequip ();
 					Equip (hit.transform.gameObject);
 				} else if (tag == "fridgePasscode") {
@@ -516,14 +519,37 @@ public class BeerMovementScript : MonoBehaviour {
 	}
 
 	void displayMentosText() {
-		powerUpText.text = "Mentos Left: " + mentosJumpsLeft.ToString ();
+        if (mentosJumpsLeft == 0)
+        {
+            powerUpText.color = Color.white;
+        }
+        else if (mentosJumpsLeft < 3)
+        {
+            powerUpText.color = Color.red;
+        } else if (mentosJumpsLeft < 5)
+        {
+            powerUpText.color = Color.yellow;
+        }else 
+        {
+            powerUpText.color = Color.green;
+        }
+		powerUpText.text = mentosJumpsLeft.ToString ();
 	}
 
 	void displayBeersText() {
-		beersSavedText.text = "Nattys Found: " + numBeersSaved.ToString ();
+		//beersSavedText.text = "Nattys Found: " + numBeersSaved.ToString ();
+        beersSavedText.text = " ";
 	}
 
-
+    void OnGUI()
+    {
+        if (!mentosTexture)
+        {
+            Debug.LogError("Assign a Mentos Texture in the inspector.");
+            return;
+        }
+        GUI.DrawTexture(new Rect(30, 30, 200, 120), mentosTexture);
+    }
 		
 	void onDestroy() { //unsubscribes
 		FrozenBeerScript.onFrozenBeerSaved -= frozenBeerSaved;
