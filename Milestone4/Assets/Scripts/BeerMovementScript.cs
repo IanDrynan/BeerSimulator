@@ -98,6 +98,9 @@ public class BeerMovementScript : MonoBehaviour {
 	GameObject libraryDoor;
 	GameObject computerDoor;
 
+    //GUI Textures
+    public Texture mentosTexture;
+
 	void Awake () {
 		self = transform;
 		FrozenBeerScript.onFrozenBeerSaved += frozenBeerSaved;
@@ -199,7 +202,7 @@ public class BeerMovementScript : MonoBehaviour {
 		if (passcode.IsActive ()) {
 			 
 		} else {
-			if (Input.GetKey("w") || Input.GetKey("s") || Input.GetKey("a") || Input.GetKey("d")) {
+			if (Input.GetKey("w") || Input.GetKey("s") /*|| Input.GetKey("a") || Input.GetKey("d")*/) {
 				anim.SetBool("rolling", true);
 				if (controller.isGrounded)
 				{
@@ -227,8 +230,8 @@ public class BeerMovementScript : MonoBehaviour {
 				gravity = 4.0f;
 			} 
 			moveDirection = transform.forward * Input.GetAxis ("Vertical") * speed;
-			float turn = Input.GetAxis ("Horizontal");
-			transform.Rotate (0, turn * turnSpeed * Time.deltaTime, 0);
+			//float turn = Input.GetAxis ("Horizontal");
+			//transform.Rotate (0, turn * turnSpeed * Time.deltaTime, 0);
 			if (controller.isGrounded && Input.GetKeyDown ("space")) {
 				vertVel = jumpSpeed;
 				gravity = 30f;
@@ -280,11 +283,17 @@ public class BeerMovementScript : MonoBehaviour {
 
 					string blurb = "SICK. These mentos make me feel amazing! What would happen if I hold Shift and Space to jump?";
 					StartCoroutine (say (blurb, 8));
-				} else if (tag != "emailHint" && tag != "email" && tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei" && tag != "TutorialBeer") {
+<
+				} else if (tag != "Untagged" && tag != "emailHint" && tag != "email" && tag != "fridgePasscode" && tag != "frozen" && tag != "door" && tag != "equipped" && tag != "frozenBeerDoor" && tag != "BeerSensei" && tag != "TutorialBeer") {
+
 					Dequip ();
 					Equip (hit.transform.gameObject);
 				} else if (tag == "fridgePasscode") {
 					passcode.gameObject.SetActive (true);
+					passcodeInput.ActivateInputField ();
+					passcodeInput.Select ();
+					passcodeInput.text = "Enter text here and press enter key when done...";
+				
 				} else if (tag == "email" || tag == "emailHint") {
 					email.gameObject.SetActive (true);
 				} 
@@ -520,14 +529,37 @@ public class BeerMovementScript : MonoBehaviour {
 	}
 
 	void displayMentosText() {
-		powerUpText.text = "Mentos Left: " + mentosJumpsLeft.ToString ();
+        if (mentosJumpsLeft == 0)
+        {
+            powerUpText.color = Color.white;
+        }
+        else if (mentosJumpsLeft < 3)
+        {
+            powerUpText.color = Color.red;
+        } else if (mentosJumpsLeft < 5)
+        {
+            powerUpText.color = Color.yellow;
+        }else 
+        {
+            powerUpText.color = Color.green;
+        }
+		powerUpText.text = mentosJumpsLeft.ToString ();
 	}
 
 	void displayBeersText() {
-		beersSavedText.text = "Nattys Found: " + numBeersSaved.ToString ();
+		//beersSavedText.text = "Nattys Found: " + numBeersSaved.ToString ();
+        beersSavedText.text = " ";
 	}
 
-
+    void OnGUI()
+    {
+        if (!mentosTexture)
+        {
+            Debug.LogError("Assign a Mentos Texture in the inspector.");
+            return;
+        }
+        GUI.DrawTexture(new Rect(30, 30, 200, 120), mentosTexture);
+    }
 		
 	void onDestroy() { //unsubscribes
 		FrozenBeerScript.onFrozenBeerSaved -= frozenBeerSaved;

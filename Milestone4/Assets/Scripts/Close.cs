@@ -16,7 +16,9 @@ public class Close : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (Input.GetKeyDown(KeyCode.Q)) {
+			gameObject.SetActive(false);
+		}
 	}
 
 	void close() {
