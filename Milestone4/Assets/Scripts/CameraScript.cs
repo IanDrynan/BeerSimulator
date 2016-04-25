@@ -163,8 +163,7 @@ public class CameraScript: MonoBehaviour {
 //		texture.SetPixel(0,0,Color.white);
 //		texture.Apply();
 //		GUI.skin.box.normal.background = texture;
-
-		GUI.Box(new Rect((Screen.width - crosshairTexture.width) / 2, (Screen.height - crosshairTexture.height - 70) / 2, crosshairTexture.width, crosshairTexture.height), crosshairTexture);
+		GUI.DrawTexture(new Rect((Screen.width - crosshairTexture.width) / 2, (Screen.height - crosshairTexture.height - 70) / 2, crosshairTexture.width, crosshairTexture.height), crosshairTexture);
     }
 
 	private static float ClampAngle(float angle, float min, float max)

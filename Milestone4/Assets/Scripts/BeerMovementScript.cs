@@ -270,7 +270,7 @@ public class BeerMovementScript : MonoBehaviour {
 			if (Physics.Raycast (ray, out hit, 10)) {
                 
 				string tag = hit.transform.gameObject.tag;
-				Debug.Log ("tag : " + tag);
+//				Debug.Log ("tag : " + tag);
 				if (tag == "Mentos") {
 					powerUp = hit.transform.gameObject;
 					powerUpScalar = mentosScalar;
@@ -429,7 +429,7 @@ public class BeerMovementScript : MonoBehaviour {
 //			other.gameObject.SetActive (false);
 		} else if (other.gameObject.CompareTag ("cutscenecollider")) {
 			yourLocation = other.gameObject.transform.position;
-			Debug.Log ("Hit Cut Scene Collider");
+//			Debug.Log ("Hit Cut Scene Collider");
 			level = "science";
 			StartCoroutine (startCutScene1 ());
 			other.gameObject.SetActive (false);
