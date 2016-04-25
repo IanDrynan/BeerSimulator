@@ -49,6 +49,7 @@ public class BeerMovementScript : MonoBehaviour {
 	public InputField passcodeInput;
 	public RawImage passcode;
 	public RawImage email;
+	public GameObject winTextGameObject;
 
 	//Cameras
 	public GameObject mainCamera;
@@ -132,6 +133,7 @@ public class BeerMovementScript : MonoBehaviour {
 		libraryDoor = GameObject.Find ("door_library");
 		computerDoor = GameObject.Find ("door_computer");
 //		Cursor.lockState = CursorLockMode.Locked;
+		winTextGameObject.SetActive(false);
 
 		//Set Checkpoint Variables
 		yourLocation = self.transform.position;
@@ -639,12 +641,13 @@ public class BeerMovementScript : MonoBehaviour {
 //	}
 //
 	IEnumerator displayWinText(string winningText) {
-
+		winTextGameObject.SetActive (true);
 		winText.text = winningText;
 		mentosJumpsLeft = 0;
 		displayMentosText ();
-		yield return new WaitForSeconds (6);
+		yield return new WaitForSeconds (4);
 		winText.text = "";
+		winTextGameObject.SetActive (false);
 
 	}
 
