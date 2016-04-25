@@ -10,8 +10,8 @@ public class CameraScript: MonoBehaviour {
 	private float x = 0.0f;
 	private float y = 0.0f;
 
-	private int mouseXSpeedMod = 2;
-	private int mouseYSpeedMod = 2;
+	private float mouseXSpeedMod = .8f;
+	private float mouseYSpeedMod = .8f;
 
 	public float MaxViewDistance = 15f;
 	public float MinViewDistance = 1f;
@@ -54,7 +54,7 @@ public class CameraScript: MonoBehaviour {
 
 
 	// Update is called once per frame
-	void Update () {
+	void LateUpdate () {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (Time.timeScale == 0)
@@ -124,7 +124,7 @@ public class CameraScript: MonoBehaviour {
             //checks if right mouse button is pushed
             //		if(Input.GetMouseButton(2))
             //		{
-            //sets CHARACTERS x rotation to match cameras x rotation
+            //sets CHARACTERS x rotation to match cameras x rotation. If commented out, the player doesn't change its rotation with camera 
             CameraTarget.eulerAngles = new Vector3(cameraX, transform.eulerAngles.y, transform.eulerAngles.z);
 
             //		}

@@ -607,7 +607,7 @@ public class BeerMovementScript : MonoBehaviour {
     {
         numBeersSaved += 1;
         displayBeersText();
-        StartCoroutine(displayWinText("One down 5 to go"));
+        StartCoroutine(displayWinText("One down, 4 to go!"));
     }
 
     void gameOver() {
@@ -643,7 +643,7 @@ public class BeerMovementScript : MonoBehaviour {
 		winText.text = winningText;
 		mentosJumpsLeft = 0;
 		displayMentosText ();
-		yield return new WaitForSeconds (8);
+		yield return new WaitForSeconds (6);
 		winText.text = "";
 
 	}
