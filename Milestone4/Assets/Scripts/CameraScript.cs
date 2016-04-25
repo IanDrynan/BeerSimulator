@@ -76,7 +76,7 @@ public class CameraScript: MonoBehaviour {
                 x = Mathf.LerpAngle(cameraRotationAngle,targetRotantionAngle, lerpRate * Time.deltaTime);
             }*/
 
-            y = ClampAngle(y, -30, 90);
+            y = ClampAngle(y, -10, 90);
             Quaternion rotation = Quaternion.Euler(y, x, 0);
 
             desireDistance -= Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * ZoomRate * Mathf.Abs(desireDistance);
@@ -144,7 +144,7 @@ public class CameraScript: MonoBehaviour {
 	}
     void OnGUI()
     {
-        GUI.Box(new Rect(Screen.width / 2, Screen.height / 2, 10, 10), "");
+        GUI.Box(new Rect(Screen.width / 2, Screen.height / 2, 10, 10),"");
     }
 
 	private static float ClampAngle(float angle, float min, float max)
