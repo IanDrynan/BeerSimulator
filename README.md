@@ -8,5 +8,6 @@ The image file contains an image of the first level, and the readme file that go
 
 
 Contains several working iterations of our game "Metal Beer Solid".
+"Milestone 4" contains the final code we submitted at the end of the year. 
 
 The gameplay contains puzzle-like elements, with some platforming. You play as a beer can in a high-school settting out to save your 5 beer can friends from various rooms in the school.
